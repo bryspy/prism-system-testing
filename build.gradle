@@ -1,0 +1,154 @@
+apply plugin: 'groovy'
+//apply plugin: 'war'
+apply plugin: 'java'
+apply plugin: 'maven'
+//apply plugin: 'cargo'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+apply from:  'build-scripts/static-code-analysis.gradle'
+apply from:  'build-scripts/integration-tests2.gradle'
+apply from:  'build-scripts/bdd-tests.gradle'
+
+
+jar {
+	baseName = 'common'
+	version =  '0.0.1'
+}
+
+group = 'com.digitalriver.prism'
+version = '0.0.1-SNAPSHOT'
+
+
+configurations.all {
+	// check for updates every build
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+uploadArchives {
+	repositories {
+	   mavenDeployer {
+			 repository(url: "http://nexus-master.digitalriverws.net/nexus/content/repositories/team_prismj_snapshots/") {
+			 
+}
+			 pom.version = "0.0.1-SNAPSHOT"
+			 pom.artifactId = "common"
+			 pom.groupId = "com.digitalriver.prism"
+			 pom.packaging = "jar"
+	   }
+	}
+}
+/*
+install {
+	repositories {
+	   mavenDeployer {
+			 repository(url: "") {
+			 
+}
+			 pom.version = "0.0.1-SNAPSHOT"
+			 pom.artifactId = "common"
+			 pom.groupId = "com.digitalriver.prism"
+			 pom.packaging = "jar"
+	   }
+	}
+}
+*/
+
+
+
+
+repositories {
+	mavenLocal()
+    maven { url 'http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/' }
+    maven { url 'http://gcartifacts.digitalriver.com/nexus/content/groups/gCArifacts/' }
+    maven { url 'http://nexproprd021001.c021.digitalriverws.net:8088/nexus/content/repositories/team_ordermgmt_releases/' }
+    maven { url 'http://nexproprd021001.c021.digitalriverws.net:8088/nexus/content/repositories/team_ordermgmt_snapshots/' }
+    maven { url 'http://repository.jboss.org/nexus/content/groups/public/' }
+    maven { url 'http://common-spring-aspects.googlecode.com/svn/maven2/' }
+    maven { url 'http://repo1.maven.org/maven2/' }
+	maven { url 'http://nexus-master.digitalriverws.net/nexus/content/repositories/team_prismj_snapshots/' }
+}
+
+dependencies {
+    compile(
+        // Spring
+        [group: 'org.springframework', name: 'spring-context', version: '3.2.2.RELEASE'],
+        [group: 'org.springframework', name: 'spring-jdbc', version: '3.2.2.RELEASE'],
+        [group: 'org.springframework', name: 'spring-web', version: '3.2.2.RELEASE'],
+        [group: 'org.springframework.integration', name: 'spring-integration-core', version: '4.0.4.RELEASE'],
+        [group: 'org.springframework', name: 'spring-tx', version: '3.2.2.RELEASE'],
+        [group: 'org.springframework', name: 'spring-aspects', version: '3.2.2.RELEASE'],
+        [group: 'org.springframework', name: 'spring-context-support', version: '3.2.2.RELEASE'],
+        
+		// RestEasy
+        [group: 'org.jboss.resteasy', name: 'resteasy-spring', version: '3.0.8.Final'],
+        [group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider', version: '3.0.8.Final'],
+        [group: 'org.jboss.resteasy', name: 'resteasy-jaxb-provider', version: '3.0.8.Final'],
+		[group: 'org.jboss.resteasy', name: 'resteasy-client', version: '3.0.8.Final'],
+		[group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.2'],
+
+        // Database
+        [group: 'oracle', name: 'ojdbc6', version: '11.2.0.1.0'],
+        [group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '8.0.12'],
+        
+        // Mybatis
+        [group: 'org.mybatis', name: 'mybatis', version: '3.2.6'],
+        [group: 'org.mybatis', name: 'mybatis-spring', version: '1.2.2'],
+        
+        // Memcache
+        [group: 'net.spy', name: 'spymemcached', version: '2.11.4'],
+        
+        // Scheduler
+        [group: 'org.quartz-scheduler', name: 'quartz', version: '2.2.1'],
+        
+        // Aspects        
+        [group: 'org.aspectj', name: 'aspectjrt', version: '1.8.2'],
+        [group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.2'],
+                
+        // Logging
+        [group: 'log4j', name: 'log4j', version: '1.2.17'],
+        [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'],
+        [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'],
+      
+        // Groovy
+        [group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.6'],
+        
+        // General Libraries
+        [group: 'com.google.guava', name: 'guava', version: '18.0'],
+        [group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'], 
+		
+		//ActiveMq
+		[group: 'org.apache.activemq', name: 'activemq-all', version: '5.10.0'],
+        
+        
+        //PRISM libraries
+        [group: 'com.digitalriver.prism', name: 'common', version: '0.0.1-SNAPSHOT', changing: true],
+        [group: 'com.digitalriver.prism', name: 'agents', version: '0.0.1-SNAPSHOT', changing: true]
+    
+    
+    )
+	
+   /* providedCompile(
+        [group: 'javax.servlet', name: 'servlet-api', version: '2.5']
+    )
+   */
+	
+    testCompile(
+		[group: 'org.jmockit', name:  'jmockit', version:  '1.11'],
+        [group: 'org.springframework', name: 'spring-test', version: '4.1.0.RELEASE'],
+        [group: 'junit', name: 'junit', version: '4.11'],
+        [group: 'org.mockito', name: 'mockito-all', version: '1.9.5'],
+        [group: 'org.powermock', name: 'powermock-module-junit4', version: '1.5.5'],
+        [group: 'org.powermock', name: 'powermock-api-mockito', version: '1.5.5'],
+        [group: 'org.powermock', name: 'powermock-api-easymock', version: '1.5.5'],
+        [group: 'info.cukes', name: 'cucumber-core', version: '1.1.8'],
+        [group: 'info.cukes', name: 'cucumber-java', version: '1.1.8'],
+        [group: 'info.cukes', name: 'cucumber-junit', version: '1.1.8'],
+        [group: 'info.cukes', name: 'cucumber-groovy', version: '1.1.8', exclude: [group: 'org.codehaus.groovy']],
+        [group: 'info.cukes', name: 'cucumber-spring', version: '1.1.8'],
+        [group: 'com.jayway.jsonpath', name: 'json-path', version: '0.9.1'],
+        [group: 'com.jayway.jsonpath', name: 'json-path-assert', version: '0.9.1'],
+        [group: 'org.json', name: 'json', version: '20140107']
+   )
+}

@@ -1,0 +1,28 @@
+// Static analysis plugins
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+
+
+
+checkstyle {
+    ignoreFailures = true
+    toolVersion = "5.7"
+    configFile =    file("build-scripts/checkstyle-config.xml")
+    reportsDir = file("$project.buildDir/reports/checkstyle")
+}
+
+findbugs {
+    ignoreFailures = true
+    toolVersion = "3.0.0"
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+
+pmd {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ruleSetFiles = files('build-scripts/pmd-ruleset.xml')
+}

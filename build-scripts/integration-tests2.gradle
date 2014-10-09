@@ -1,0 +1,84 @@
+// Assumes 'java', 'groovy' or 'scala' plugins have been applied before
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+//systemProp.integration.test.mi.environment=local
+
+task printSystemProps{
+    println "ENV VAR: " + System.properties['int-test-mi-environment']
+    
+    // Iterate over the source sets
+    sourceSets.all {
+        println "Name: " + name
+        println "Classes Dir: " + output.classesDir
+        println "Resources Dir: " + output.resourcesDir
+        
+        
+        
+//       / println "classpath: " + getRuntimeClasspath().getAsPath()
+    }
+
+    
+    
+}
+
+// Add integration test source sets
+// NOTE:  Can also add "scala" to the list if need to support that also
+sourceSets {
+  integrationTest { sourceSet ->
+    ["java", "groovy",  "resources"].each {
+      if (!sourceSet.hasProperty(it)) return
+      sourceSet."$it".srcDir file("src/integration-test/${it}")
+    }
+  }
+}
+/*
+sourceSets {
+    // Note that just declaring this sourceset creates two configurations.
+    integrationTest {
+        java {
+            srcDir 'src/integration-test/java'
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output 
+        }
+
+        resources {
+            srcDir 'src/integration-test/resources'
+        }
+    }
+}
+*/
+
+/*
+sourceSets {
+    integrationTest {
+        java.srcDir file('src/integration-test/java')
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+*/
+// Setup dependencies for integration testing
+dependencies {
+  integrationTestCompile sourceSets.main.output
+  integrationTestCompile sourceSets.test.output
+  integrationTestCompile configurations.testCompile
+  integrationTestRuntime configurations.testRuntime
+}
+/*
+compileIntegrationTestJava {
+    classpath += sourceSets.main.output
+}
+compileIntegrationTestGroovy {
+    classpath = compileIntegrationTestJava.classpath
+}
+*/
+// Define integration test task
+task integrationTest(type: Test) {
+    description = 'Runs the integration tests.'
+    group = 'verification'
+    //dependsOn integrationTestClasses
+ // testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath + sourceSets.main.runtimeClasspath
+    //testReportsDir = file("$project.buildDir/reports/inttest")
+}

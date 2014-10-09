@@ -1,0 +1,35 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+
+sourceSets {
+    // Note that just declaring this sourceset creates two configurations.
+    integrationTest {
+        java {
+            srcDir 'src/integration-test/java'
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+
+        resources {
+            srcDir 'src/integration-test/resources'
+        }
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type:Test){
+    description = "Run integration tests (located in src/integration-test/...)."
+    testClassesDir = project.sourceSets.integrationTest.output.classesDir
+    classpath = project.sourceSets.integrationTest.runtimeClasspath
+}
+
+
+

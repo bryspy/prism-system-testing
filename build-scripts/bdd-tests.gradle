@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+sourceSets {
+    // Note that just declaring this sourceset creates two configurations.
+    bddTest {
+
+        groovy {
+            srcDir 'src/bdd-test/java'
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+        /*
+        java {
+            srcDir 'src/bdd-test/java'
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+       */
+        resources {
+            srcDir 'src/bdd-test/resources'
+        }
+    }
+}
+
+configurations {
+    bddTestCompile.extendsFrom testCompile
+    bddTestRuntime.extendsFrom testRuntime
+}
+
+task bddTest(type:Test){
+    description = "Run BDD tests (located in src/bdd-test/...)."
+    testClassesDir = project.sourceSets.bddTest.output.classesDir
+    classpath = project.sourceSets.bddTest.runtimeClasspath
+}
+
+compileBddTestGroovy.dependsOn.remove("compileBddTestJava")
+compileBddTestJava.dependsOn compileBddTestGroovy
+//task compileBddTestJava(dependsOn: 'compileBddTestGroovy') << {
+//    println 'Building Groovy first'
+//}
