@@ -112,7 +112,10 @@ dependencies {
         [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'],
       
         // Groovy
-        [group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.6'],
+        [group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.4'],
+		[group: 'org.apache.ivy', name:'ivy', version:'2.2.0'],
+		//Http-Builder
+		[group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7'],
         
         // General Libraries
         [group: 'com.google.guava', name: 'guava', version: '18.0'],
