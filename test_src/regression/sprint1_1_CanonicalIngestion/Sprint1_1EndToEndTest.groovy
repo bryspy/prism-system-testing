@@ -23,7 +23,6 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
-
 import common.Prism_Common_Test
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
