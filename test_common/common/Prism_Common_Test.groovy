@@ -7,11 +7,13 @@ import org.junit.Test;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
 import javassist.bytecode.stackmap.BasicBlock.Catch;
+import junit.framework.AssertionFailedError
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.SystemUtils
@@ -21,7 +23,14 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
 
+/**
+ * 
+ * @author bikonomovski
+ *
+ */
 class Prism_Common_Test {
 
 	def static final tomClosetPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/closet"
@@ -30,7 +39,10 @@ class Prism_Common_Test {
 	
 	
 	
-	
+	/**
+	 * 
+	 * @param domain
+	 */
 	public static void initiateServices(def domain) {
 		//Initiate Services before Ingestion
 		def services = ["monitor", "ingestion", "transformation", "publish", "dataprovider"];
@@ -49,7 +61,9 @@ class Prism_Common_Test {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public static void deleteInbound() {
 		if ( SystemUtils.IS_OS_WINDOWS )
 		{
@@ -62,7 +76,10 @@ class Prism_Common_Test {
 			throw new Exception("Missing Unix Paths")
 		}
 	}
-	
+	/**
+	 * 
+	 * @param path
+	 */
 	public static void deleteInbound(def path) {
 		if ( SystemUtils.IS_OS_WINDOWS )
 		{
@@ -76,7 +93,9 @@ class Prism_Common_Test {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public static void deleteOutbound() {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			new File("${tomOutboundPath}").eachFile { f -> f.delete() }
@@ -89,7 +108,10 @@ class Prism_Common_Test {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param path
+	 */
 	public static void deleteOutbound(def path) {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			new File("${path}").eachFile { f -> f.delete() }
@@ -102,7 +124,9 @@ class Prism_Common_Test {
 	}
 	
 	
-	
+	/**
+	 * 
+	 */
 	public static void copyToCloset() {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			//Copy from /common/.../resources to Tomca/prism/closet
@@ -114,7 +138,10 @@ class Prism_Common_Test {
 			throw new Exception("Missing Unix Paths")
 		}
 	}
-	
+	/**
+	 * 
+	 * @param path
+	 */
 	public static void copyToCloset(def path) {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			//Copy from /common/.../resources to Tomca/prism/closet
@@ -126,4 +153,72 @@ class Prism_Common_Test {
 			throw new Exception("Missing Unix Paths")
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public static File getResourceFile(filename) {
+		//Modify ProductID, to be unique for "New" product designation
+		File file = new File("test_src/resources/${filename}")
+		//println file.getAbsolutePath()
+		assert file.exists()
+		
+		return file;
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static String randomExRefIdToFile(File file) {
+		
+		def xml = new XmlSlurper().parse(file)
+		
+		Random rand = new Random()
+		
+		def prod_id_list = []
+		def prod_id = rand.nextInt(100000000+1).toString()
+		def product = xml.items.product.find{
+			(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+		
+		//Is Product Node within Items?
+		try {
+			assert !product.toString().equals(null);
+		}
+		catch (AssertionFailedError e) {
+			
+			try {
+				product = xml.product.find{
+				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+				
+				assert !product.equals(null)
+			} catch (AssertionFailedError a) {
+				throw Exception("Cannot Find Product Node! Check XML Structure.")
+			}
+		}
+		
+		
+		
+		product.externalReferenceID = prod_id
+		
+		
+		writeXmlToFile(file, xml)
+		
+		return "${product.externalReferenceID}";
+	}
+	
+	
+	
+	public static void writeXmlToFile(File file, def xml) {
+		FileWriter writer = new FileWriter(file);
+		BufferedWriter buff = new BufferedWriter(writer);
+		//buff.write(xml.text());
+		buff.write(XmlUtil.serialize(xml))
+		buff.close();
+	}
+	
 }
