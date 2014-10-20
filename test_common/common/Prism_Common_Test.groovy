@@ -25,6 +25,7 @@ import groovy.json.*
 import groovy.util.XmlSlurper
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
+import groovy.io.FileType
 
 /**
  * 
@@ -106,8 +107,7 @@ class Prism_Common_Test {
 		}
 		
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param path
@@ -122,8 +122,6 @@ class Prism_Common_Test {
 		}
 		
 	}
-	
-	
 	/**
 	 * 
 	 */
@@ -212,13 +210,78 @@ class Prism_Common_Test {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param file
+	 * @param xml
+	 */
 	public static void writeXmlToFile(File file, def xml) {
 		FileWriter writer = new FileWriter(file);
 		BufferedWriter buff = new BufferedWriter(writer);
 		//buff.write(xml.text());
 		buff.write(XmlUtil.serialize(xml))
 		buff.close();
+	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static boolean isFileIngested(fileName, domain) {
+		def isIngest = false
+		while (!isIngest) {
+			try {
+				def monitor = new HTTPBuilder("${domain}") .get( path : '/monitor/cache') 
+				{resp, json ->
+					assert resp.status == 200
+					assert json."1".fileStatusList[0].filename.equals(fileName).equals(fileName)
+				}
+				//TODO Check on .../fileStatusList.status to verify completion of file ingestion
+				isIngest = true
+			} catch (NullPointerException e) {
+				//Pause for 4 seconds
+				Thread.sleep(4000);
+				//println isIngest
+				
+			}
+		}
+		return isIngest;
+	}
+	
+	
+	/**
+	 * 
+	 * @param outboundLocation
+	 * @param filename
+	 * @return
+	 */
+	public static File isOutboundPublished(outboundLocation, filename) {
+		def exists = false
+		//File outXmlFile = new File("${outboundLocation}/${filename}")
+		def i=0
+		
+		print "Waiting on Outbound File"
+		//Check and wait for outbound File to drop
+		def outDir = new File("${outboundLocation}")
+		while (outDir.list().length < 1) {
+			if (i > 60) {
+				throw new FileNotFoundException("Outbound File Not Published")
+			}
+			print "."
+			Thread.sleep(1000);
+				
+			i++
+		}
+		assert outDir.list().length < 1
+		println "\nOutbound File Dropped."
+		
+		def list = []
+		outDir.eachFileRecurse (FileType.FILES) { file ->
+				list << file
+		}
+		File outXmlFile = new File(list[0].absolutePath)
+		return outXmlFile;
 	}
 	
 }

@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.After
 import org.junit.Test;
 import java.util.Random;
+import org.apache.commons.io.FileUtils
 
 import groovyx.net.http.*
 import static groovyx.net.http.ContentType.*
@@ -21,9 +22,9 @@ import common.Prism_Common_Test;
 class NewProductsTest {
 
 	static String domain = "http://localhost:8080";
-	/*Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
+	Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
 		, "DRHADMIN", "summer123")
-	*/
+	
 	String inFilename = "SingleProduct.xml"
 	
 	@BeforeClass
@@ -42,18 +43,26 @@ class NewProductsTest {
 
 	@Test
 	public void testNewProductPersistence() {
-		//TODO Move Test XML File1 with New Product to Inbound for Ingestion
-		File prodFile = Prism_Common_Test.getResourceFile(inFilename)
-		def prod_id = Prism_Common_Test.randomExRefIdToFile(prodFile)
 		
+		//Generate Random ID for New Prism Product
+		File prodFile = Prism_Common_Test.getResourceFile(inFilename)
+		File destDir = new File(Prism_Common_Test.tomInboundPath)
+		def prod_id = Prism_Common_Test.randomExRefIdToFile(prodFile)
 		
 		println "prod id = ${prod_id}"
 		
-		def product_ids = ""
+		//TODO Move Test XML test File with New Product to Inbound for Ingestion
 		
-//		singProdXML.withWriter { outWriter ->
-//			XmlUtil.serialize( new StreamingMarkupBuilder().bind{ mkp.yield xml }, outWriter )
-//		}
+		//FileUtils.copyFile(prodFile, "${Prism_Common_Test.tomInboundPath}/${prodFile}")
+		
+		
+		FileUtils.copyFileToDirectory(prodFile, destDir)
+		
+		assert Prism_Common_Test.isFileIngested(prodFile, domain).equals(true)
+		Prism_Common_Test.isOutboundPublished(Prism_Common_Test.tomOutboundPath)
+		
+		println "prod id = ${prod_id}"
+		
 			
 		
 		//TODO Verify in database that New Product data was added for persistence

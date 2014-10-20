@@ -57,7 +57,7 @@ class Sprint1_1EndToEndTest {
 	
 	
 	@Test
-	public void _01testIngestion() {
+	public void verifyTransformation() {
 		
 		def bpuFileName = "BPU_Digital_River_48513_20140908_210257.xml"
 		
@@ -70,53 +70,11 @@ class Sprint1_1EndToEndTest {
 		FileUtils.copyFile(xmlFile, inbound)
 		
 		//Verify file was picked up on inbound
-		def con = true
-		while (con) {
-			try {
-				def monitor = new HTTPBuilder(domain).get(path : "/monitor/cache") {resp, json ->
-					assert resp.status == 200
-					assert json."1".fileStatusList[0].filename.equals(bpuFileName)
-				}
-				//TODO Check on .../fileStatusList.status to verify completion of file ingestion
-				con = false
-			} catch (NullPointerException e) {
-				//Pause for 4 seconds
-				Thread.sleep(4000);
-				println con
-				
-			}
-		}
-	}
-	
-	
-	@Test
-	public void _02testTransformation() {
-		def exists = false
-		def outXMLFile = new File("${tomOutboundPath}/${outFilename}")
-		def i=0
-		print "Waiting on Outbound File"
+		assert Prism_Common_Test.isFileIngested(bpuFileName, domain) == true
 		
-		//Check and wait for outbound File to drop
-		while (!exists) {
-			outXMLFile = new File("${tomOutboundPath}/${outFilename}")
-			try {
-				outXMLFile.readLines()
-				exists = outXMLFile.exists()
-			} catch (IOException) {
-			print "."
-				Thread.sleep(1000);
-				if (i > 60) {
-					throw new FileNotFoundException("Outbound File Not Published")
-				}
-				i++
-			}
-		}
-		
-		println "\nOutbound File Dropped."
-		def items = new XmlSlurper().parse(outXMLFile)
+		File outXmlFile = Prism_Common_Test.isOutboundPublished(tomOutboundPath, outFilename)
+		def items = new XmlSlurper().parse(outXmlFile)
 		//Verify that shortDescription is not empty
 		assert !(items.product.shortDescription.isEmpty())
-		
-		
 	}
 }
