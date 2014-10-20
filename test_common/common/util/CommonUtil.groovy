@@ -1,4 +1,6 @@
-package common;
+package common.util;
+
+import java.io.File;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -27,43 +29,14 @@ import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import groovy.io.FileType
 
-/**
- * 
- * @author bikonomovski
- *
- */
-class Prism_Common_Test {
+class CommonUtil {
 
 	def static final tomClosetPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/closet"
 	def static final tomInboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/inbound"
 	def static final tomOutboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/outbound"
 	
-	
-	
 	/**
-	 * 
-	 * @param domain
-	 */
-	public static void initiateServices(def domain) {
-		//Initiate Services before Ingestion
-		def services = ["monitor", "ingestion", "transformation", "publish", "dataprovider"];
-		
-		try {
-			services.each() {i -> new HTTPBuilder( "${domain}" ).get(path : "/${i}/status" )
-				{resp ->
-					assert "${resp.status}" == "200"
-					println "${i}: ${resp.statusLine}"}
-			}
-			println "---------------------------------\n\n"
-		}
-		catch ( HttpResponseException ex ) {
-			// default failure handler throws an exception:
-			println "Unexpected response error: ${ex.statusCode}"
-		}
-	}
-	
-	/**
-	 * 
+	 *
 	 */
 	public static void deleteInbound() {
 		if ( SystemUtils.IS_OS_WINDOWS )
@@ -78,7 +51,7 @@ class Prism_Common_Test {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void deleteInbound(def path) {
@@ -95,7 +68,7 @@ class Prism_Common_Test {
 	}
 	
 	/**
-	 * 
+	 *
 	 */
 	public static void deleteOutbound() {
 		if (SystemUtils.IS_OS_WINDOWS) {
@@ -109,7 +82,7 @@ class Prism_Common_Test {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void deleteOutbound(def path) {
@@ -123,7 +96,7 @@ class Prism_Common_Test {
 		
 	}
 	/**
-	 * 
+	 *
 	 */
 	public static void copyToCloset() {
 		if (SystemUtils.IS_OS_WINDOWS) {
@@ -137,7 +110,7 @@ class Prism_Common_Test {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void copyToCloset(def path) {
@@ -154,21 +127,39 @@ class Prism_Common_Test {
 	
 	
 	/**
-	 * 
-	 * @param filename
-	 * @return
+	 *
+	 * @param resourceFile
+	 * @param closetDir
 	 */
-	public static File getResourceFile(filename) {
-		//Modify ProductID, to be unique for "New" product designation
-		File file = new File("test_src/resources/${filename}")
-		//println file.getAbsolutePath()
-		assert file.exists()
+	public static void copyResourceToCloset(File resourceFile, File closetDir) {
+		File resFile = getResourceFile(resourceFile);
+		FileUtils.copyFileToDirectory(resourceFile, closetDir)
 		
-		return file;
 	}
 	
 	/**
-	 * 
+	 *
+	 * @param filename
+	 * @return
+	 */
+	public static File getClosetFile(String filename) {
+		File closFile;
+		
+		if (SystemUtils.IS_OS_WINDOWS) {
+			//Copy from /common/.../resources to Tomca/prism/closet
+			closFile = new File("${tomClosetPath}/${filename}")
+			assert closFile.exists()
+		}else if ( SystemUtils.IS_OS_LINUX )
+		{
+			//Linux Paths?!?!
+			throw new Exception("Missing Unix Paths")
+		}
+		
+		return closFile;
+	}
+	
+	/**
+	 *
 	 * @param file
 	 * @return
 	 */
@@ -211,7 +202,7 @@ class Prism_Common_Test {
 	
 	
 	/**
-	 * 
+	 *
 	 * @param file
 	 * @param xml
 	 */
@@ -223,65 +214,5 @@ class Prism_Common_Test {
 		buff.close();
 	}
 	
-	/**
-	 * 
-	 * @param file
-	 * @return
-	 */
-	public static boolean isFileIngested(fileName, domain) {
-		def isIngest = false
-		while (!isIngest) {
-			try {
-				def monitor = new HTTPBuilder("${domain}") .get( path : '/monitor/cache') 
-				{resp, json ->
-					assert resp.status == 200
-					assert json."1".fileStatusList[0].filename.equals(fileName).equals(fileName)
-				}
-				//TODO Check on .../fileStatusList.status to verify completion of file ingestion
-				isIngest = true
-			} catch (NullPointerException e) {
-				//Pause for 4 seconds
-				Thread.sleep(4000);
-				//println isIngest
-				
-			}
-		}
-		return isIngest;
-	}
-	
-	
-	/**
-	 * 
-	 * @param outboundLocation
-	 * @param filename
-	 * @return
-	 */
-	public static File isOutboundPublished(outboundLocation, filename) {
-		def exists = false
-		//File outXmlFile = new File("${outboundLocation}/${filename}")
-		def i=0
-		
-		print "Waiting on Outbound File"
-		//Check and wait for outbound File to drop
-		def outDir = new File("${outboundLocation}")
-		while (outDir.list().length < 1) {
-			if (i > 60) {
-				throw new FileNotFoundException("Outbound File Not Published")
-			}
-			print "."
-			Thread.sleep(1000);
-				
-			i++
-		}
-		assert outDir.list().length < 1
-		println "\nOutbound File Dropped."
-		
-		def list = []
-		outDir.eachFileRecurse (FileType.FILES) { file ->
-				list << file
-		}
-		File outXmlFile = new File(list[0].absolutePath)
-		return outXmlFile;
-	}
 	
 }
