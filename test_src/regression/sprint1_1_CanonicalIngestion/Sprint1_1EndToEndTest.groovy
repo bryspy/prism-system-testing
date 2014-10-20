@@ -23,7 +23,9 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
-import common.Prism_Common_Test
+
+import common.prism.CommonPrism
+import common.util.CommonUtil
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class Sprint1_1EndToEndTest {
@@ -37,14 +39,14 @@ class Sprint1_1EndToEndTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//Remove Inbound and Outbound Files
-		Prism_Common_Test.deleteInbound(tomInboundPath)
-		Prism_Common_Test.deleteOutbound(tomOutboundPath)
+		CommonUtil.deleteInbound(tomInboundPath)
+		CommonUtil.deleteOutbound(tomOutboundPath)
 		
 		//Copy to Closet 
-		Prism_Common_Test.copyToCloset(tomClosetPath)
+		CommonUtil.copyToCloset(tomClosetPath)
 		
 		//Initiate Services
-		Prism_Common_Test.initiateServices(domain)
+		CommonPrism.initiateServices(domain)
 		
 	}
 
@@ -70,11 +72,12 @@ class Sprint1_1EndToEndTest {
 		FileUtils.copyFile(xmlFile, inbound)
 		
 		//Verify file was picked up on inbound
-		assert Prism_Common_Test.isFileIngested(bpuFileName, domain) == true
+		assert CommonPrism.isFileIngested(bpuFileName, domain) == true
 		
-		File outXmlFile = Prism_Common_Test.isOutboundPublished(tomOutboundPath, outFilename)
+		File outXmlFile = CommonPrism.isOutboundPublished(tomOutboundPath)
 		def items = new XmlSlurper().parse(outXmlFile)
 		//Verify that shortDescription is not empty
 		assert !(items.product.shortDescription.isEmpty())
+		println "Transform to <ShortDescription> Occured!"
 	}
 }
