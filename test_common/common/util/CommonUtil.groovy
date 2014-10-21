@@ -25,9 +25,12 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
+import groovy.util.slurpersupport.GPathResult
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import groovy.io.FileType
+
+import common.prism.CommonPrism
 
 class CommonUtil {
 
@@ -131,9 +134,9 @@ class CommonUtil {
 	 * @param resourceFile
 	 * @param closetDir
 	 */
-	public static void copyResourceToCloset(File resourceFile, File closetDir) {
-		File resFile = getResourceFile(resourceFile);
-		FileUtils.copyFileToDirectory(resourceFile, closetDir)
+	public static void copyResourceToInbound(File resourceFile, File inboundDir) {
+		File resFile = CommonPrism.getResourceFile(resourceFile);
+		FileUtils.copyFileToDirectory(resourceFile, inboundDir)
 		
 	}
 	
@@ -163,9 +166,10 @@ class CommonUtil {
 	 * @param file
 	 * @return
 	 */
-	public static String randomExRefIdToFile(File file) {
+	public static File randomExRefIdToFile(File file) {
 		
-		def xml = new XmlSlurper().parse(file)
+		def xml = new XmlSlurper(false, false).parse(file)
+//		def xml = new XmlSlurper().parse(file)
 		
 		Random rand = new Random()
 		
@@ -176,17 +180,18 @@ class CommonUtil {
 		
 		//Is Product Node within Items?
 		try {
-			assert !product.toString().equals(null);
+			assert !product.toString().equals(""), "Error: xml.items.product Not Found in ${file.name}!!";
 		}
-		catch (AssertionFailedError e) {
+		catch (AssertionError e) {
 			
 			try {
 				product = xml.product.find{
 				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
 				
-				assert !product.equals(null)
-			} catch (AssertionFailedError a) {
-				throw Exception("Cannot Find Product Node! Check XML Structure.")
+				assert !product.toString().equals(""), "Error: xml.prodcut Not Found in ${file.name}!!";
+				
+			} catch (AssertionError a) {
+				throw new Exception("Cannot Find Product Node! Check XML Structure.")
 			}
 		}
 		
@@ -194,10 +199,13 @@ class CommonUtil {
 		
 		product.externalReferenceID = prod_id
 		
+		File newOutFile = new File("${file.parentFile}/Test${file.name}")
+		newOutFile.createNewFile()
+//		FileUtils.copyFile(file, newOutFile)
+		println newOutFile.absolutePath
+		writeXmlToFile(newOutFile, xml)
 		
-		writeXmlToFile(file, xml)
-		
-		return "${product.externalReferenceID}";
+		return newOutFile;
 	}
 	
 	
@@ -209,7 +217,6 @@ class CommonUtil {
 	public static void writeXmlToFile(File file, def xml) {
 		FileWriter writer = new FileWriter(file);
 		BufferedWriter buff = new BufferedWriter(writer);
-		//buff.write(xml.text());
 		buff.write(XmlUtil.serialize(xml))
 		buff.close();
 	}

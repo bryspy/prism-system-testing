@@ -110,7 +110,7 @@ class CommonPrism {
 	 * @param filename
 	 * @return
 	 */
-	public static File isOutboundPublished(String outboundLocation) {
+	public static boolean isOutboundPublished(String outboundLocation) {
 		def outDir = new File("${outboundLocation}")
 		def exists = false
 		//File outXmlFile = new File("${outboundLocation}/${filename}")
@@ -137,6 +137,22 @@ class CommonPrism {
 		}
 		File outXmlFile = new File(list[0].absolutePath)
 		return outXmlFile;
+	}
+	
+	/**
+	 * 
+	 * @param outboundLocation
+	 * @return
+	 */
+	public static File getOutboundFile(String outboundLocation) {
+		def outDir = new File("${outboundLocation}")
+		def list = []
+		outDir.eachFileRecurse (FileType.FILES) { file ->
+				list << file
+		}
+		File outXmlFile = new File(list[0].absolutePath)
+		
+		return outXmlFile
 	}
 	
 }
