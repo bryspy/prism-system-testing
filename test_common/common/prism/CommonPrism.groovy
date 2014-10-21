@@ -26,6 +26,7 @@ import groovy.util.XmlSlurper
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import groovy.io.FileType
+import groovy.sql.Sql
 
 /**
  * 
@@ -153,6 +154,13 @@ class CommonPrism {
 		File outXmlFile = new File(list[0].absolutePath)
 		
 		return outXmlFile
+	}
+	
+	public static Sql getNewDbConnection() {
+		Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
+			, "DRHADMIN", "summer123")
+		
+		return sql
 	}
 	
 }
