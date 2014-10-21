@@ -23,7 +23,9 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
-import common.Prism_Common_Test
+
+import common.prism.CommonPrism
+import common.util.CommonUtil
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class Sprint1_1EndToEndTest {
@@ -37,14 +39,14 @@ class Sprint1_1EndToEndTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//Remove Inbound and Outbound Files
-		Prism_Common_Test.deleteInbound(tomInboundPath)
-		Prism_Common_Test.deleteOutbound(tomOutboundPath)
+		CommonUtil.deleteInbound(tomInboundPath)
+		CommonUtil.deleteOutbound(tomOutboundPath)
 		
 		//Copy to Closet 
-		Prism_Common_Test.copyToCloset(tomClosetPath)
+		CommonUtil.copyToCloset(tomClosetPath)
 		
 		//Initiate Services
-		Prism_Common_Test.initiateServices(domain)
+		CommonPrism.initiateServices(domain)
 		
 	}
 
@@ -57,7 +59,7 @@ class Sprint1_1EndToEndTest {
 	
 	
 	@Test
-	public void _01testIngestion() {
+	public void verifyTransformation() {
 		
 		def bpuFileName = "BPU_Digital_River_48513_20140908_210257.xml"
 		
@@ -70,53 +72,12 @@ class Sprint1_1EndToEndTest {
 		FileUtils.copyFile(xmlFile, inbound)
 		
 		//Verify file was picked up on inbound
-		def con = true
-		while (con) {
-			try {
-				def monitor = new HTTPBuilder(domain).get(path : "/monitor/cache") {resp, json ->
-					assert resp.status == 200
-					assert json."1".fileStatusList[0].filename.equals(bpuFileName)
-				}
-				//TODO Check on .../fileStatusList.status to verify completion of file ingestion
-				con = false
-			} catch (NullPointerException e) {
-				//Pause for 4 seconds
-				Thread.sleep(4000);
-				println con
-				
-			}
-		}
-	}
-	
-	
-	@Test
-	public void _02testTransformation() {
-		def exists = false
-		def outXMLFile = new File("${tomOutboundPath}/${outFilename}")
-		def i=0
-		print "Waiting on Outbound File"
+		assert CommonPrism.isFileIngested(bpuFileName, domain) == true
 		
-		//Check and wait for outbound File to drop
-		while (!exists) {
-			outXMLFile = new File("${tomOutboundPath}/${outFilename}")
-			try {
-				outXMLFile.readLines()
-				exists = outXMLFile.exists()
-			} catch (IOException) {
-			print "."
-				Thread.sleep(1000);
-				if (i > 60) {
-					throw new FileNotFoundException("Outbound File Not Published")
-				}
-				i++
-			}
-		}
-		
-		println "\nOutbound File Dropped."
-		def items = new XmlSlurper().parse(outXMLFile)
+		File outXmlFile = CommonPrism.isOutboundPublished(tomOutboundPath)
+		def items = new XmlSlurper().parse(outXmlFile)
 		//Verify that shortDescription is not empty
 		assert !(items.product.shortDescription.isEmpty())
-		
-		
+		println "Transform to <ShortDescription> Occured!"
 	}
 }

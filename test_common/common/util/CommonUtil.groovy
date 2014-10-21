@@ -1,4 +1,6 @@
-package common;
+package common.util;
+
+import java.io.File;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -23,46 +25,21 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
+import groovy.util.slurpersupport.GPathResult
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
+import groovy.io.FileType
 
-/**
- * 
- * @author bikonomovski
- *
- */
-class Prism_Common_Test {
+import common.prism.CommonPrism
+
+class CommonUtil {
 
 	def static final tomClosetPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/closet"
 	def static final tomInboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/inbound"
 	def static final tomOutboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/outbound"
 	
-	
-	
 	/**
-	 * 
-	 * @param domain
-	 */
-	public static void initiateServices(def domain) {
-		//Initiate Services before Ingestion
-		def services = ["monitor", "ingestion", "transformation", "publish", "dataprovider"];
-		
-		try {
-			services.each() {i -> new HTTPBuilder( "${domain}" ).get(path : "/${i}/status" )
-				{resp ->
-					assert "${resp.status}" == "200"
-					println "${i}: ${resp.statusLine}"}
-			}
-			println "---------------------------------\n\n"
-		}
-		catch ( HttpResponseException ex ) {
-			// default failure handler throws an exception:
-			println "Unexpected response error: ${ex.statusCode}"
-		}
-	}
-	
-	/**
-	 * 
+	 *
 	 */
 	public static void deleteInbound() {
 		if ( SystemUtils.IS_OS_WINDOWS )
@@ -77,7 +54,7 @@ class Prism_Common_Test {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void deleteInbound(def path) {
@@ -94,7 +71,7 @@ class Prism_Common_Test {
 	}
 	
 	/**
-	 * 
+	 *
 	 */
 	public static void deleteOutbound() {
 		if (SystemUtils.IS_OS_WINDOWS) {
@@ -106,10 +83,9 @@ class Prism_Common_Test {
 		}
 		
 	}
-	
-	
+
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void deleteOutbound(def path) {
@@ -122,10 +98,8 @@ class Prism_Common_Test {
 		}
 		
 	}
-	
-	
 	/**
-	 * 
+	 *
 	 */
 	public static void copyToCloset() {
 		if (SystemUtils.IS_OS_WINDOWS) {
@@ -139,7 +113,7 @@ class Prism_Common_Test {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void copyToCloset(def path) {
@@ -156,27 +130,46 @@ class Prism_Common_Test {
 	
 	
 	/**
-	 * 
-	 * @param filename
-	 * @return
+	 *
+	 * @param resourceFile
+	 * @param closetDir
 	 */
-	public static File getResourceFile(filename) {
-		//Modify ProductID, to be unique for "New" product designation
-		File file = new File("test_src/resources/${filename}")
-		//println file.getAbsolutePath()
-		assert file.exists()
+	public static void copyResourceToInbound(File resourceFile, File inboundDir) {
+		File resFile = CommonPrism.getResourceFile(resourceFile);
+		FileUtils.copyFileToDirectory(resourceFile, inboundDir)
 		
-		return file;
 	}
 	
 	/**
-	 * 
+	 *
+	 * @param filename
+	 * @return
+	 */
+	public static File getClosetFile(String filename) {
+		File closFile;
+		
+		if (SystemUtils.IS_OS_WINDOWS) {
+			//Copy from /common/.../resources to Tomca/prism/closet
+			closFile = new File("${tomClosetPath}/${filename}")
+			assert closFile.exists()
+		}else if ( SystemUtils.IS_OS_LINUX )
+		{
+			//Linux Paths?!?!
+			throw new Exception("Missing Unix Paths")
+		}
+		
+		return closFile;
+	}
+	
+	/**
+	 *
 	 * @param file
 	 * @return
 	 */
-	public static String randomExRefIdToFile(File file) {
+	public static File randomExRefIdToFile(File file) {
 		
-		def xml = new XmlSlurper().parse(file)
+		def xml = new XmlSlurper(false, false).parse(file)
+//		def xml = new XmlSlurper().parse(file)
 		
 		Random rand = new Random()
 		
@@ -187,17 +180,18 @@ class Prism_Common_Test {
 		
 		//Is Product Node within Items?
 		try {
-			assert !product.toString().equals(null);
+			assert !product.toString().equals(""), "Error: xml.items.product Not Found in ${file.name}!!";
 		}
-		catch (AssertionFailedError e) {
+		catch (AssertionError e) {
 			
 			try {
 				product = xml.product.find{
 				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
 				
-				assert !product.equals(null)
-			} catch (AssertionFailedError a) {
-				throw Exception("Cannot Find Product Node! Check XML Structure.")
+				assert !product.toString().equals(""), "Error: xml.prodcut Not Found in ${file.name}!!";
+				
+			} catch (AssertionError a) {
+				throw new Exception("Cannot Find Product Node! Check XML Structure.")
 			}
 		}
 		
@@ -205,20 +199,27 @@ class Prism_Common_Test {
 		
 		product.externalReferenceID = prod_id
 		
+		File newOutFile = new File("${file.parentFile}/Test${file.name}")
+		newOutFile.createNewFile()
+//		FileUtils.copyFile(file, newOutFile)
+		println newOutFile.absolutePath
+		writeXmlToFile(newOutFile, xml)
 		
-		writeXmlToFile(file, xml)
-		
-		return "${product.externalReferenceID}";
+		return newOutFile;
 	}
 	
 	
-	
+	/**
+	 *
+	 * @param file
+	 * @param xml
+	 */
 	public static void writeXmlToFile(File file, def xml) {
 		FileWriter writer = new FileWriter(file);
 		BufferedWriter buff = new BufferedWriter(writer);
-		//buff.write(xml.text());
 		buff.write(XmlUtil.serialize(xml))
 		buff.close();
 	}
+	
 	
 }

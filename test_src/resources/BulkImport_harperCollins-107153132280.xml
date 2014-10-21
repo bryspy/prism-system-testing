@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <loader xmlns="urn:com.digitalriver.bulkloader" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:com.digitalriver.bulkloader http://drhadmin.digitalriver.com/integration/xsd/BulkLoader/6?disposition=attachment">
   <version>1.0</version>
   <loaderType>incremental</loaderType>
   <catalogID>18839800</catalogID>
-  <catalogName>TestCatalogName</catalogName>
-  <ownerCompanyID>testcoid</ownerCompanyID>
+  <catalogName>HarperCollins</catalogName>
+  <ownerCompanyID>harperco</ownerCompanyID>
   <noOverwriteIfEmpty>true</noOverwriteIfEmpty>
   <items>
     <product>
       <action>ADD</action>
-      <externalReferenceID></externalReferenceID>
+      <externalReferenceID>9780007531202</externalReferenceID>
       <locale>en_GB</locale>
-      <companyID>testcoid</companyID>
-      <catalogID>12345678</catalogID>
-      <productName>Test Product</productName>
-      <displayName>Test Product Display Name</displayName>
-      <shortDescription></shortDescription>
+      <companyID>harperco</companyID>
+      <catalogID>18839800</catalogID>
+      <productName testVal="&lt;TEST&gt;">The Chronicles of &quot;Narnia&quot; 7-in-1 Bundle with Bonus Book, Boxen</productName>
+      <displayName>The Chronicles of &quot;Narnia&quot; 7-in-1 Bundle with Bonus Book, Boxen</displayName>
+      <shortDescription><![CDATA[<p>This collection contains all seven books in the classic fantasy series, The Chronicles of Narnia, without art, to appeal to older readers. This special ebook edition includes an introduction by C. S. Lewis???s stepson, Douglas Gresham and full text and art for Lewis???s very first work ??? Boxen!</p>]]></shortDescription>
       <platform>eBook</platform>
-      <manufacturer>testManufacturer</manufacturer>
+      <manufacturer>Digiplug</manufacturer>
       <mfrPartNumber>EBA2B784D04B6C50E0430602390A83FC</mfrPartNumber>
       <sku></sku>
       <eccn>EAR99</eccn>
@@ -101,7 +101,7 @@
         </attribute>
         <attribute>
           <name>Imprint</name>
-          <value>HarperCollinsChildren???sBooks</value>
+          <value>HarperCollinsChildren'sBooks</value>
           <familyID>10200300</familyID>
           <familyName>Variations</familyName>
         </attribute>

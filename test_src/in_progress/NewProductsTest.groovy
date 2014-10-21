@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.After
 import org.junit.Test;
 import java.util.Random;
+import org.apache.commons.io.FileUtils
 
 import groovyx.net.http.*
 import static groovyx.net.http.ContentType.*
@@ -16,44 +17,66 @@ import groovy.sql.Sql
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 
-import common.Prism_Common_Test;
+import common.prism.CommonPrism;
+import common.util.CommonUtil;
 
 class NewProductsTest {
 
 	static String domain = "http://localhost:8080";
-	/*Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
+	Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
 		, "DRHADMIN", "summer123")
-	*/
-	String inFilename = "SingleProduct.xml"
+	
+	static String inFilename = "SingleProduct.xml"
+//	static String inFilename = "BulkImport_harperCollins-107153132280.xml"
+	File inFile;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		//Remove Inbound and Outbound Files
-		Prism_Common_Test.deleteInbound()
-		Prism_Common_Test.deleteOutbound()
-		
-		//Copy to Closet
-		Prism_Common_Test.copyToCloset()
+		CommonUtil.deleteInbound()
+		CommonUtil.deleteOutbound()
 		
 		//Initiate Services
-		Prism_Common_Test.initiateServices(domain)
+		CommonPrism.initiateServices(domain)
 	}
 	
 
 	@Test
 	public void testNewProductPersistence() {
-		//TODO Move Test XML File1 with New Product to Inbound for Ingestion
-		File prodFile = Prism_Common_Test.getResourceFile(inFilename)
-		def prod_id = Prism_Common_Test.randomExRefIdToFile(prodFile)
+		
+		//Generate Random ID for New Prism Product
+		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
+		File prodFile = CommonPrism.getResourceFile(inFilename)
+		assert prodFile.exists()
+		File destDir = new File(CommonUtil.tomInboundPath)
+		assert destDir.exists()
+		
+		inFile = CommonUtil.randomExRefIdToFile(prodFile)
+//		assert prod_id != "", "prod_id Not Set"
+//		println "prod id = ${prod_id}"
+		
+		//Start Ingestion!  
+		// :Move Test XML test File with New Product to Inbound for Ingestion
+		FileUtils.copyFileToDirectory(inFile, destDir)
+		
+		assert {new File("${destDir}/${inFile}").exists()}
 		
 		
-		println "prod id = ${prod_id}"
+		//Verify File ingested and published
+		assert CommonPrism.isFileIngested(inFile.name, domain).equals(true)
+		println "File ${inFile.name} Ingested!"
+		 
 		
-		def product_ids = ""
+		/*TODO Failing to Publish; Self Closing <shortDescription/> 
+		 * in modified file from randomExRefIdToFile()
+		 * 
+		 */
+		//assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
+		//File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
 		
-//		singProdXML.withWriter { outWriter ->
-//			XmlUtil.serialize( new StreamingMarkupBuilder().bind{ mkp.yield xml }, outWriter )
-//		}
+		//println "${outFile.name} was published!"
+		
+		
 			
 		
 		//TODO Verify in database that New Product data was added for persistence
@@ -79,5 +102,10 @@ class NewProductsTest {
 		*/
 		
 		//sql.execute("delete from prism_source where client_id = ${cl_id}")
+		
+		CommonUtil.deleteInbound()
+		//TODO Delete testIngestFile(s)
+		inFile.deleteOnExit()
+		
 	}
 }
