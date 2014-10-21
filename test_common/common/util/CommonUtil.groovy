@@ -196,13 +196,17 @@ class CommonUtil {
 		}
 		
 		
-		
+		//set externalReferenceID to newly generated prod_id
 		product.externalReferenceID = prod_id
 		
+		//create a new file to write updated xml to 
 		File newOutFile = new File("${file.parentFile}/Test${file.name}")
 		newOutFile.createNewFile()
-//		FileUtils.copyFile(file, newOutFile)
+		
 		println newOutFile.absolutePath
+		println "prod_id: ${prod_id}"
+		
+		//Write it
 		writeXmlToFile(newOutFile, xml)
 		
 		return newOutFile;

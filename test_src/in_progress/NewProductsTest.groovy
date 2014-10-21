@@ -51,9 +51,8 @@ class NewProductsTest {
 		File destDir = new File(CommonUtil.tomInboundPath)
 		assert destDir.exists()
 		
+		//get File returned with newly generated externalReferenceID
 		inFile = CommonUtil.randomExRefIdToFile(prodFile)
-//		assert prod_id != "", "prod_id Not Set"
-//		println "prod id = ${prod_id}"
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
@@ -67,14 +66,11 @@ class NewProductsTest {
 		println "File ${inFile.name} Ingested!"
 		 
 		
-		/*TODO Failing to Publish; Self Closing <shortDescription/> 
-		 * in modified file from randomExRefIdToFile()
-		 * 
-		 */
-		//assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
-		//File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
 		
-		//println "${outFile.name} was published!"
+		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
+		File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
+		
+		println "${outFile.name} was published!"
 		
 		
 			
@@ -104,7 +100,6 @@ class NewProductsTest {
 		//sql.execute("delete from prism_source where client_id = ${cl_id}")
 		
 		CommonUtil.deleteInbound()
-		//TODO Delete testIngestFile(s)
 		inFile.deleteOnExit()
 		
 	}
