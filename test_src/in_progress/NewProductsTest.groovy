@@ -19,6 +19,7 @@ import groovy.xml.XmlUtil
 
 import common.prism.CommonPrism;
 import common.util.CommonUtil;
+import common.util.CommonXml;
 
 class NewProductsTest {
 
@@ -52,7 +53,7 @@ class NewProductsTest {
 		assert destDir.exists()
 		
 		//get File returned with newly generated externalReferenceID
-		inFile = CommonUtil.randomExRefIdToFile(prodFile)
+		inFile = CommonXml.randomExRefIdToFile(prodFile)
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
@@ -84,6 +85,8 @@ class NewProductsTest {
 		
 		
 		//TODO Verify that Outbound File includes New Products for Publish to GC
+		def outXml = new XmlSlurper(false, false).parse(outFile)
+		println outXml.items.product.externalReferenceId
 		
 		fail("Not Yet Implemented")
 	}
@@ -93,13 +96,15 @@ class NewProductsTest {
 	void after() {
 		//TODO Clean up New Products added to Database
 		
-		/*def sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
-				, "DRHADMIN", "summer123")
-		*/
+		/*
+		 * def sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
+		 * 	, "DRHADMIN", "summer123")
+		 */
 		
 		//sql.execute("delete from prism_source where client_id = ${cl_id}")
 		
 		CommonUtil.deleteInbound()
+		//Delete testIngestFile(s)
 		inFile.deleteOnExit()
 		
 	}

@@ -84,6 +84,9 @@ class CommonPrism {
 	 */
 	public static boolean isFileIngested(String fileName, String domain) {
 		def isIngest = false
+		def monitorSstatus = new HTTPBuilder("${domain}") .get( path : '/monitor/status') 
+				{resp, json -> }
+		
 		while (!isIngest) {
 			try {
 				def monitor = new HTTPBuilder("${domain}") .get( path : '/monitor/cache') 
@@ -93,7 +96,7 @@ class CommonPrism {
 					assert json."1".fileStatusList[0].filename.equals(fileName)
 				}
 				//TODO Check on .../fileStatusList.status to verify completion of file ingestion
-				isIngest = true
+				isIngest = true;
 			} catch (NullPointerException e) {
 				//Pause for 4 seconds
 				Thread.sleep(4000);

@@ -130,6 +130,7 @@ class DuplicateProductsTest {
 	
 	@After
 	public void after() {
+		//Delete Ingested File on Exit
 		inFile.deleteOnExit()
 	}
 
