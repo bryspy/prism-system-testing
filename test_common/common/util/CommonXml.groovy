@@ -39,15 +39,11 @@ class CommonXml {
 	 * @param file
 	 * @return
 	 */
-	public static File randomExRefIdToFile(File file) {
+	public static File randomExRefIdToFile(File file, String exRefId) {
 		
 		def xml = new XmlSlurper(false, false).parse(file)
 //		def xml = new XmlSlurper().parse(file)
 		
-		Random rand = new Random()
-		
-		def prod_id_list = []
-		def prod_id = rand.nextInt(100000000+1).toString()
 		def product = xml.items.product.find{
 			(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
 		
@@ -70,19 +66,27 @@ class CommonXml {
 		
 		
 		//set externalReferenceID to newly generated prod_id
-		product.externalReferenceID = prod_id
+		product.externalReferenceID = exRefId
 		
 		//create a new file to write updated xml to
 		File newOutFile = new File("${file.parentFile}/BPU_${file.name}")
 		newOutFile.createNewFile()
 		
 		println newOutFile.absolutePath
-		println "prod_id: ${prod_id}"
+		println "id: ${exRefId}"
 		
 		//Write it
 		CommonUtil.writeXmlToFile(newOutFile, xml)
 		
 		return newOutFile;
+	}
+	
+	public static String randomIdAsString() {
+		Random rand = new Random()
+		
+		def prod_id = rand.nextInt(100000000+1).toString()
+		
+		return prod_id.toString()
 	}
 
 }

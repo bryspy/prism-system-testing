@@ -55,8 +55,11 @@ class NewProductsTest {
 		File destDir = new File(CommonUtil.tomInboundPath)
 		assert destDir.exists()
 		
+		
+		//Generate Random Id
+		String exRefId = CommonXml.randomIdAsString()
 		//get File returned with newly generated externalReferenceID
-		inFile = CommonXml.randomExRefIdToFile(prodFile)
+		inFile = CommonXml.randomExRefIdToFile(prodFile, exRefId)
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
@@ -91,9 +94,14 @@ class NewProductsTest {
 /*
  * Step 3: Verify that Outbound File includes new products for Publish to GC		
  */
-		//TODO Verify that Outbound File includes New Products for Publish to GC
+		//Verify that Outbound File includes New Products for Publish to GC
 		def outXml = new XmlSlurper(false, false).parse(outFile)
-		println "outXml = ${outXml.product.find{it.externalReferenceID == '31344775'} }"
+		
+		assert outXml.'**'.find {
+				it.name().startsWith('exter') }.each
+					{ node -> node.text() == '${exRefId}' }  == exRefId
+		
+		
 		fail("Not Yet Implemented")
 	}
 	
