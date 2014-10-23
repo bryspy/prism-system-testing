@@ -45,6 +45,9 @@ class NewProductsTest {
 	@Test
 	public void testNewProductPersistence() {
 		
+/*
+ * Step 1: Ingest xml with new Single Product
+ */
 		//Generate Random ID for New Prism Product
 		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
 		File prodFile = CommonPrism.getResourceFile(inFilename)
@@ -67,7 +70,9 @@ class NewProductsTest {
 		println "File ${inFile.name} Ingested!"
 		 
 		
-		
+/*
+ * Step 2: Check that File was Published
+ */
 		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
 		File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
 		
@@ -83,11 +88,12 @@ class NewProductsTest {
 //			}
 		
 		
-		
+/*
+ * Step 3: Verify that Outbound File includes new products for Publish to GC		
+ */
 		//TODO Verify that Outbound File includes New Products for Publish to GC
 		def outXml = new XmlSlurper(false, false).parse(outFile)
-		println outXml.items.product.externalReferenceId
-		
+		println "outXml = ${outXml.product.find{it.externalReferenceID == '31344775'} }"
 		fail("Not Yet Implemented")
 	}
 	
