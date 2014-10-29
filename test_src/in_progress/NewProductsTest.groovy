@@ -24,10 +24,12 @@ import common.util.CommonXml;
 class NewProductsTest {
 
 	static String domain = "http://localhost:8080";
-	Sql sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
+	Sql sqlAws = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
 		, "DRHADMIN", "summer123")
+	//Sql sqlLocal = Sql.newInstance("jdbc:oracle:thin@()", "Username","Pwd")
 	
 	static String inFilename = "SingleProduct.xml"
+	//static String inFilename = "DoubleProduct.xml"
 //	static String inFilename = "BulkImport_harperCollins-107153132280.xml"
 	File inFile;
 	
@@ -63,20 +65,17 @@ class NewProductsTest {
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
-		FileUtils.copyFileToDirectory(inFile, destDir)
+		//FileUtils.copyFileToDirectory(inFile, destDir)
 		
-		assert {new File("${destDir}/${inFile}").exists()}
-		
-		
-		//Verify File ingested and published
-		assert CommonPrism.isFileIngested(inFile.name, domain).equals(true)
+		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir, domain)
+
 		println "File ${inFile.name} Ingested!"
 		 
 		
 /*
  * Step 2: Check that File was Published
  */
-		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
+		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true), "Outbound File Not Published!"
 		File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
 		
 		println "${outFile.name} was published!"
@@ -98,7 +97,7 @@ class NewProductsTest {
 		def outXml = new XmlSlurper(false, false).parse(outFile)
 		
 		assert outXml.'**'.find {
-				it.name().startsWith('exter') }.each
+				it.name().startsWith('externalReference') }.each
 					{ node -> node.text() == '${exRefId}' }  == exRefId
 		
 		
@@ -119,7 +118,7 @@ class NewProductsTest {
 		
 		CommonUtil.deleteInbound()
 		//Delete testIngestFile(s)
-		inFile.deleteOnExit()
+		//inFile.deleteOnExit()
 		
 	}
 }

@@ -77,19 +77,56 @@ class CommonPrism {
 	
 	
 	
+	public static String getCurrentBatchId(String domain) {
+		String id;
+		
+		 def activeBatchList = new HTTPBuilder("${domain}").get( path : '/monitor/activebatchlist')
+        {resp, json ->
+            id = json[0]
+        }
+		
+		return id
+	}
+	
+	public static String startIngestionGetBatchId(File inFile, File inboundDir, String domain) {
+		String id;
+		boolean batchId = false;
+		def i=0;
+		
+		FileUtils.copyFileToDirectory(inFile, inboundDir)
+		assert {new File("${inboundDir}/${inFile}").exists()}
+		
+		while (!batchId) {
+			if (i > 1000) {
+				throw new Exception("Did not get Batch ID!!!")
+			}
+			try {
+				id = getCurrentBatchId(domain)
+				
+				assert id.getBytes().size() > 0
+				batchId = true;
+				
+			}catch (NullPointerException e) {
+				
+				Thread.sleep(100);
+			}
+			i++;
+		}
+		println "${id}"
+		return id;
+	}
+	
 	/**
 	 * 
 	 * @param file
 	 * @return
 	 */
-	public static boolean isFileIngested(String fileName, String domain) {
+	public static boolean isFileIngested(String fileName, String batchId, String domain) {
 		def isIngest = false
-		def monitorSstatus = new HTTPBuilder("${domain}") .get( path : '/monitor/status') 
-				{resp, json -> }
 		
 		while (!isIngest) {
 			try {
-				def monitor = new HTTPBuilder("${domain}") .get( path : '/monitor/cache') 
+				def monitor = new HTTPBuilder("${domain}").get( path : '/monitor/cache') 
 				{resp, json ->
 					assert resp.status == 200
 					
