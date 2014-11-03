@@ -24,13 +24,14 @@ import common.util.CommonXml;
 class NewProductsTest {
 
 	static String domain = "http://localhost:8080";
+	
 	Sql sqlAws = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
 		, "DRHADMIN", "summer123")
+	
 	//Sql sqlLocal = Sql.newInstance("jdbc:oracle:thin@()", "Username","Pwd")
 	
 	static String inFilename = "SingleProduct.xml"
 	//static String inFilename = "DoubleProduct.xml"
-//	static String inFilename = "BulkImport_harperCollins-107153132280.xml"
 	File inFile;
 	
 	@BeforeClass
@@ -51,7 +52,6 @@ class NewProductsTest {
  * Step 1: Ingest xml with new Single Product
  */
 		//Generate Random ID for New Prism Product
-		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
 		File prodFile = CommonPrism.getResourceFile(inFilename)
 		assert prodFile.exists()
 		File destDir = new File(CommonUtil.tomInboundPath)
@@ -60,18 +60,18 @@ class NewProductsTest {
 		
 		//Generate Random Id
 		String exRefId = CommonXml.randomIdAsString()
+		
 		//get File returned with newly generated externalReferenceID
 		inFile = CommonXml.randomExRefIdToFile(prodFile, exRefId)
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
-		//FileUtils.copyFileToDirectory(inFile, destDir)
 		
 		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir, domain)
 
 		println "File ${inFile.name} Ingested!"
 		 
-		
+		assert CommonPrism.isBatchFinished(batchId, domain).equals(true), "Batch Did Not Finish processing File!"
 /*
  * Step 2: Check that File was Published
  */
@@ -83,11 +83,15 @@ class NewProductsTest {
 		
 			
 		
-		//TODO Verify in database that New Product data was added for persistence
-//		sql.eachRow("""select * from prism_Source_Data s, prism_product prod, prism_publish pub
-//			where s.prism_product_id = ${prod_id}""") { prod ->
-//				assert prod.prism_product_id.equals(prod_id)
-//			}
+		//Verify in database that New Product data was added for persistence
+		sqlAws.eachRow(""" select d.PRISM_PRODUCT_ID, d.COMPANY_ID, c.EXTERNAL_REFERENCE_ID, d.SOURCE_DOCUMENT
+							from PRISM_Key_Crosswalk c,  PRISM_Source_Data d
+							where c.External_Reference_ID = ${exRefId} AND 
+								c.PRISM_Product_ID=d.PRISM_Product_ID""") 
+				{ id ->
+					assert id.External_Reference_ID.equals(exRefId), "Product with External Reference ID '${exRefId}' was not added to the Database!"
+					println "Product with External Reference ID '${exRefId}' was added to the Database!"
+				}	
 		
 		
 /*
@@ -99,9 +103,6 @@ class NewProductsTest {
 		assert outXml.'**'.find {
 				it.name().startsWith('externalReference') }.each
 					{ node -> node.text() == '${exRefId}' }  == exRefId
-		
-		
-		fail("Not Yet Implemented")
 	}
 	
 	
@@ -118,7 +119,7 @@ class NewProductsTest {
 		
 		CommonUtil.deleteInbound()
 		//Delete testIngestFile(s)
-		//inFile.deleteOnExit()
+		inFile.deleteOnExit()
 		
 	}
 }
