@@ -33,24 +33,22 @@ import common.prism.CommonPrism
 
 class CommonUtil {
 
-	def static final tomClosetPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/closet"
-	def static final tomInboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/inbound"
-	def static final tomOutboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/outbound"
-	
+	/*
+	 * Tomcat Locations No Longer used after Spring Refactoring.
+	 * Inbound and Outbound Locations set to project specific prism/...
+	 */
+//	def static final tomClosetPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/closet"
+//	def static final tomInboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/inbound"
+//	def static final tomOutboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/outbound"
+
+	def static final winInpath = "C:/dev/prism/ingestion/prism/inbound"
+	def static final winOutpath = "C:/dev/prism/publish/prism/outbound"
+
 	/**
 	 *
 	 */
 	public static void deleteInbound() {
-		if ( SystemUtils.IS_OS_WINDOWS )
-		{
-			//delete inbound file
-			new File("${tomInboundPath}").eachFile { f -> f.delete() }
-		}
-		else if ( SystemUtils.IS_OS_LINUX )
-		{
-			//Linux Paths?!?!
-			throw new Exception("Missing Unix Paths")
-		}
+		deleteInbound(winInpath)
 	}
 	/**
 	 *
@@ -68,20 +66,12 @@ class CommonUtil {
 			throw new Exception("Missing Unix Paths")
 		}
 	}
-	
+
 	/**
-	 *
+	 * Delete Outbound Directory at winOutpath for Windows system outbound path in publish
 	 */
-	public static void deleteOutbound() {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			new File("${tomOutboundPath}").eachFile { f -> f.delete() }
-		}else if ( SystemUtils.IS_OS_LINUX )
-		{
-			//Linux Paths?!?!
-			throw new Exception("Missing Unix Paths")
-		}
-		
-	}
+	public static void deleteOutbound() { deleteOutbound(winOutpath) }
+	
 
 	/**
 	 *
@@ -95,39 +85,10 @@ class CommonUtil {
 			//Linux Paths?!?!
 			throw new Exception("Missing Unix Paths")
 		}
-		
+
 	}
-	/**
-	 *
-	 */
-	public static void copyToCloset() {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			//Copy from /common/.../resources to Tomca/prism/closet
-			FileUtils.copyDirectory(new File("C:/dev/prism/common/build/resources/test/"),
-				new File("${tomClosetPath}"))
-		}else if ( SystemUtils.IS_OS_LINUX )
-		{
-			//Linux Paths?!?!
-			throw new Exception("Missing Unix Paths")
-		}
-	}
-	/**
-	 *
-	 * @param path
-	 */
-	public static void copyToCloset(def path) {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			//Copy from /common/.../resources to Tomca/prism/closet
-			FileUtils.copyDirectory(new File("C:/dev/prism/common/build/resources/test/"),
-				new File("${path}"))
-		}else if ( SystemUtils.IS_OS_LINUX )
-		{
-			//Linux Paths?!?!
-			throw new Exception("Missing Unix Paths")
-		}
-	}
-	
-	
+
+
 	/**
 	 *
 	 * @param resourceFile
@@ -136,31 +97,33 @@ class CommonUtil {
 	public static void copyResourceToInbound(File resourceFile, File inboundDir) {
 		File resFile = CommonPrism.getResourceFile(resourceFile);
 		FileUtils.copyFileToDirectory(resourceFile, inboundDir)
-		
+
 	}
-	
+
 	/**
-	 *
+	 * Deprecated.
+	 * No longer getting resources outside of prism-system-testing.
 	 * @param filename
 	 * @return
 	 */
+	@Deprecated
 	public static File getClosetFile(String filename) {
 		File closFile;
-		
+
 		if (SystemUtils.IS_OS_WINDOWS) {
 			//Copy from /common/.../resources to Tomca/prism/closet
-			closFile = new File("${tomClosetPath}/${filename}")
+			//closFile = new File("${tomClosetPath}/${filename}")
 			assert closFile.exists()
 		}else if ( SystemUtils.IS_OS_LINUX )
 		{
 			//Linux Paths?!?!
 			throw new Exception("Missing Unix Paths")
 		}
-		
+
 		return closFile;
 	}
-	
-	
+
+
 	/**
 	 *
 	 * @param file
@@ -172,6 +135,6 @@ class CommonUtil {
 		buff.write(XmlUtil.serialize(xml))
 		buff.close();
 	}
-	
-	
+
+
 }

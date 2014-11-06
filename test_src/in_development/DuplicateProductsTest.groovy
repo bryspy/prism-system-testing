@@ -1,4 +1,4 @@
-package in_progress;
+package in_development;
 
 import static org.junit.Assert.*;
 
@@ -34,9 +34,6 @@ class DuplicateProductsTest {
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
-		
-		//Initiate Services
-		CommonPrism.initiateServices(domain)
 		
 	}
 

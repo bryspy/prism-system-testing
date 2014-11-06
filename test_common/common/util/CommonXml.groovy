@@ -35,9 +35,10 @@ import common.prism.CommonPrism
 class CommonXml {
 	
 	/**
-	 *
+	 * 
 	 * @param file
-	 * @return
+	 * @param exRefId
+	 * @return File with random id in External Reference Id
 	 */
 	public static File randomExRefIdToFile(File file, String exRefId) {
 		

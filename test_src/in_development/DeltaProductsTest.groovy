@@ -1,4 +1,4 @@
-package in_progress;
+package in_development;
 
 
 import static org.junit.Assert.*;
@@ -35,12 +35,15 @@ class DeltaProductsTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		
+		println "\n\n===Start Test ${DeltaProductsTest.name}===\n\n"
+		
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
 		
 		//Initiate Services
-		CommonPrism.initiateServices(domain)
+		//CommonPrism.initiateServices(domain)
 	}
 
 
@@ -53,27 +56,30 @@ class DeltaProductsTest {
 		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
 		File prodFile = CommonPrism.getResourceFile(single_Product_Template_Filename)
 		assert prodFile.exists()
-		File destDir = new File(CommonUtil.tomInboundPath)
-		assert destDir.exists()
+		File ingestDir = new File(CommonUtil.winInpath)
+		assert ingestDir.exists()
+		
+		String exRefId = CommonXml.randomIdAsString()
 		
 		//get File returned with newly generated externalReferenceID
-		newProductFile = CommonXml.randomExRefIdToFile(prodFile)
+		newProductFile = CommonXml.randomExRefIdToFile(prodFile, exRefId)
 		
 		//Start Ingestion!
 		// :Move Test XML test File with New Product to Inbound for Ingestion
-		FileUtils.copyFileToDirectory(newProductFile, destDir)
+		//FileUtils.copyFileToDirectory(newProductFile, destDir)
+		CommonPrism.startIngestionGetBatchId(newProductFile, ingestDir)
 		
-		assert {new File("${destDir}/${newProductFile}").exists()}
+		assert {new File("${ingestDir}/${newProductFile}").exists()}
 		
 		
 		//Verify File ingested and published
-		assert CommonPrism.isFileIngested(newProductFile.name, domain).equals(true)
-		println "File ${newProductFile.name} Ingested!"
+		//assert CommonPrism.isFileIngested(newProductFile.name, domain).equals(true)
+		//println "File ${newProductFile.name} Ingested!"
 		 
 		
 		
-		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
-		File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
+		assert CommonPrism.isOutboundPublished(CommonUtil.winOutpath).equals(true)
+		File outFile = CommonPrism.getOutboundFile(CommonUtil.winOutpath)
 		
 		println "${outFile.name} was published!"
 		
@@ -112,9 +118,9 @@ class DeltaProductsTest {
 		// :Move Test XML test File with New Product to Inbound for Ingestion
 		println "\n\n------------------------------------------"
 		println "Delta File"
-		FileUtils.copyFileToDirectory(deltaFile, destDir)
+		FileUtils.copyFileToDirectory(deltaFile, ingestDir)
 		
-		assert {new File("${destDir}/${deltaFile}").exists()}
+		assert {new File("${ingestDir}/${deltaFile}").exists()}
 		
 		
 		//Verify File ingested and published
@@ -123,8 +129,8 @@ class DeltaProductsTest {
 		 
 		
 		
-		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true)
-		outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
+		assert CommonPrism.isOutboundPublished(CommonUtil.winPublishOutpath).equals(true)
+		outFile = CommonPrism.getOutboundFile(CommonUtil.winPublishOutpath)
 		
 		println "${outFile.name} was published!"
 		
@@ -144,6 +150,8 @@ class DeltaProductsTest {
 		//Delete Test Files on Exit
 //		newProductFile.deleteOnExit()
 //		deltaFile.deleteOnExit()
+		
+		println "\n\n====End Test====\n\n"
 	}
 
 }

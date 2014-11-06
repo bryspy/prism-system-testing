@@ -1,4 +1,4 @@
-package in_progress;
+package in_development;
 import static org.junit.Assert.*;
 
 import java.net.URL;
@@ -24,24 +24,24 @@ import common.util.CommonXml;
 class NewProductsTest {
 
 	static String domain = "http://localhost:8080";
-	
-	Sql sqlAws = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
-		, "DRHADMIN", "summer123")
-	
-	//Sql sqlLocal = Sql.newInstance("jdbc:oracle:thin@()", "Username","Pwd")
-	
+		
 	static String inFilename = "SingleProduct.xml"
 	//static String inFilename = "DoubleProduct.xml"
 	File inFile;
 	
+	Sql sql = CommonPrism.getNewDbConnection()
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		
+		println "\n\n====Start Test 'NewProductsTest'====\n\n"
+		
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
 		
 		//Initiate Services
-		CommonPrism.initiateServices(domain)
+		//CommonPrism.initiateServices()
 	}
 	
 
@@ -54,7 +54,7 @@ class NewProductsTest {
 		//Generate Random ID for New Prism Product
 		File prodFile = CommonPrism.getResourceFile(inFilename)
 		assert prodFile.exists()
-		File destDir = new File(CommonUtil.tomInboundPath)
+		File destDir = new File(CommonUtil.winInpath)
 		assert destDir.exists()
 		
 		
@@ -67,11 +67,11 @@ class NewProductsTest {
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
 		
-		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir, domain)
+		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir)
 
 		println "File ${inFile.name} Ingested!"
 		 
-		assert CommonPrism.isBatchFinished(batchId, domain).equals(true), "Batch Did Not Finish processing File!"
+		assert CommonPrism.isBatchFinished(batchId).equals(true), "Batch Did Not Finish processing File!"
 /*
  * Step 2: Check that File was Published
  */
@@ -84,7 +84,7 @@ class NewProductsTest {
 			
 		
 		//Verify in database that New Product data was added for persistence
-		sqlAws.eachRow(""" select d.PRISM_PRODUCT_ID, d.COMPANY_ID, c.EXTERNAL_REFERENCE_ID, d.SOURCE_DOCUMENT
+		sql.eachRow(""" select d.PRISM_PRODUCT_ID, d.COMPANY_ID, c.EXTERNAL_REFERENCE_ID, d.SOURCE_DOCUMENT
 							from PRISM_Key_Crosswalk c,  PRISM_Source_Data d
 							where c.External_Reference_ID = ${exRefId} AND 
 								c.PRISM_Product_ID=d.PRISM_Product_ID""") 
@@ -120,6 +120,8 @@ class NewProductsTest {
 		CommonUtil.deleteInbound()
 		//Delete testIngestFile(s)
 		inFile.deleteOnExit()
+		
+		println "\n\n====Ending Test===\n\n"
 		
 	}
 }
