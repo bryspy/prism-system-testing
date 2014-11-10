@@ -23,7 +23,7 @@ import groovy.xml.XmlUtil
 import common.prism.CommonPrism;
 import common.util.CommonUtil;
 
-class DuplicateProductsTest {
+class SimpleDuplicateProductsTest {
 
 	static String domain = "http://localhost:8080";
 	static String inFilename = "SingleProduct.xml"

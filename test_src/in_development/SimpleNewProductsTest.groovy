@@ -21,12 +21,10 @@ import common.prism.CommonPrism;
 import common.util.CommonUtil;
 import common.util.CommonXml;
 
-class NewProductsTest {
+class SimpleNewProductsTest {
 
-	static String domain = "http://localhost:8080";
 		
 	static String inFilename = "SingleProduct.xml"
-	//static String inFilename = "DoubleProduct.xml"
 	File inFile;
 	
 	Sql sql = CommonPrism.getNewDbConnection()

@@ -150,7 +150,7 @@ class CommonPrism {
 		
 		println "Attempting to get Batch ID from monitor/activebatchlist"
 		while (!batchId) {
-			if (i > 1000) {
+			if (i > 500) {
 				throw new Exception("Did not get Batch ID!!!")
 			}
 			try {
@@ -165,7 +165,7 @@ class CommonPrism {
 					{
 						print '.'
 					}
-					Thread.sleep(100);
+					Thread.sleep(10);
 					continue;
 				}
 				

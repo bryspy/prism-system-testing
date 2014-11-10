@@ -25,7 +25,7 @@ import common.util.CommonUtil;
 import common.util.CommonXml;
 
 
-class DeltaProductsTest {
+class SimpleDeltaProductsTest {
 
 	static File newProductFile;
 	static File deltaFile;
@@ -36,7 +36,7 @@ class DeltaProductsTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
-		println "\n\n===Start Test ${DeltaProductsTest.name}===\n\n"
+		println "\n\n===Start Test ${SimpleDeltaProductsTest.name}===\n\n"
 		
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
