@@ -38,8 +38,6 @@ class SimpleNewProductsTest {
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
 		
-		//Initiate Services
-		//CommonPrism.initiateServices()
 	}
 	
 

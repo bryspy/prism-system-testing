@@ -148,8 +148,8 @@ class SimpleDeltaProductsTest {
 	@After
 	public void after() {
 		//Delete Test Files on Exit
-//		newProductFile.deleteOnExit()
-//		deltaFile.deleteOnExit()
+		newProductFile.deleteOnExit()
+		deltaFile.deleteOnExit()
 		
 		println "\n\n====End Test====\n\n"
 	}

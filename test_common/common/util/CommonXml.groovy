@@ -82,6 +82,49 @@ class CommonXml {
 		return newOutFile;
 	}
 	
+	public static File randomArrayIdsToFile(File inFile, def arrayIds ) {
+		def xml = new XmlSlurper(false, false).parse(inFile)
+		//		def xml = new XmlSlurper().parse(file)
+		def newProduct;		
+		
+		def emptyProduct = xml.items.product.find{
+			(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+		
+		//Is Product Node within Items?
+		try {
+			assert !emptyProduct.toString().equals(""), "Error: xml.items.product Not Found in ${inFile.name}!!";
+		}
+		catch (AssertionError e) {
+			
+			try {
+				emptyProduct = xml.product.find{
+				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+				
+				assert !emptyProduct.toString().equals(""), "Error: xml.prodcut Not Found in ${inFile.name}!!";
+				
+			} catch (AssertionError a) {
+				throw new Exception("Cannot Find Product Node! Check XML Structure.")
+			}
+		}
+		arrayIds.each { i ->
+			newProduct = emptyProduct
+			newProduct.externalReferenceID = i
+			
+			xml.'**'.product.appendNode(newProduct)
+		}
+		
+		//create a new file to write updated xml to
+		File newOutFile = new File("${inFile.parentFile}/BPU_${inFile.name}")
+		newOutFile.createNewFile()
+		
+		println newOutFile.absolutePath
+		
+		//Write it
+		CommonUtil.writeXmlToFile(newOutFile, xml)
+		
+		return newOutFile
+	}
+	
 	public static String randomIdAsString() {
 		Random rand = new Random()
 		
