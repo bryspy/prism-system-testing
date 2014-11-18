@@ -25,7 +25,7 @@ import common.util.CommonUtil;
 import common.util.CommonXml;
 
 
-class SimpleDeltaProductsTest {
+class DeltaProductsTest {
 
 	static File newProductFile;
 	static File deltaFile;
@@ -36,7 +36,7 @@ class SimpleDeltaProductsTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
-		println "\n\n===Start Test ${SimpleDeltaProductsTest.name}===\n\n"
+		println "\n\n===Start Test ${DeltaProductsTest.name}===\n\n"
 		
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
@@ -56,7 +56,7 @@ class SimpleDeltaProductsTest {
 		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
 		File prodFile = CommonPrism.getResourceFile(single_Product_Template_Filename)
 		assert prodFile.exists()
-		File ingestDir = new File(CommonUtil.winInpath)
+		File ingestDir = new File(CommonUtil.localInpath)
 		assert ingestDir.exists()
 		
 		String exRefId = CommonXml.randomIdAsString()
@@ -78,8 +78,8 @@ class SimpleDeltaProductsTest {
 		 
 		
 		
-		assert CommonPrism.isOutboundPublished(CommonUtil.winOutpath).equals(true)
-		File outFile = CommonPrism.getOutboundFile(CommonUtil.winOutpath)
+		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true)
+		File outFile = CommonPrism.getOutboundFile(CommonUtil.localOutpath)
 		
 		println "${outFile.name} was published!"
 		

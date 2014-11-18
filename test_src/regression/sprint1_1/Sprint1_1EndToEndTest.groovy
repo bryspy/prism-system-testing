@@ -1,4 +1,4 @@
-package regression.sprint1_1_CanonicalIngestion
+package regression.sprint1_1
 import static org.junit.Assert.*;
 
 import org.junit.Before;

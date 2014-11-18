@@ -43,10 +43,8 @@ class CommonXml {
 	public static File randomExRefIdToFile(File file, String exRefId) {
 		
 		def xml = new XmlSlurper(false, false).parse(file)
-//		def xml = new XmlSlurper().parse(file)
 		
-		def product = xml.items.product.find{
-			(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+		def product = xml.items.product
 		
 		//Is Product Node within Items?
 		try {
@@ -55,8 +53,8 @@ class CommonXml {
 		catch (AssertionError e) {
 			
 			try {
-				product = xml.product.find{
-				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+				product = xml.product/*.find{
+				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') } */
 				
 				assert !product.toString().equals(""), "Error: xml.prodcut Not Found in ${file.name}!!";
 				
@@ -82,49 +80,90 @@ class CommonXml {
 		return newOutFile;
 	}
 	
+	/**
+	 * Takes an array of IDs and creates a <product> node for each value and writes that to a file called BPU_MultiProduct.xml 
+	 * @param inFile
+	 * @param arrayIds
+	 * @return File with provided IDs in serialized XML
+	 */
 	public static File randomArrayIdsToFile(File inFile, def arrayIds ) {
-		def xml = new XmlSlurper(false, false).parse(inFile)
-		//		def xml = new XmlSlurper().parse(file)
-		def newProduct;		
+		def inXml = new XmlSlurper(false, false).parse(inFile)
+		def outXml
 		
-		def emptyProduct = xml.items.product.find{
-			(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+		GPathResult inProd = inXml.items.product
+		GPathResult inItems = inXml.items
+		
 		
 		//Is Product Node within Items?
 		try {
-			assert !emptyProduct.toString().equals(""), "Error: xml.items.product Not Found in ${inFile.name}!!";
+			assert !inProd.toString().equals(""), "Error: xml.items.product Not Found in ${inFile.name}!!";
+			
+			def id = arrayIds.pop()
+			inProd.externalReferenceID = id
+			
+			def prodString = "${serializeXml(inProd).drop(38)}"
+			def addProduct
+			
+			arrayIds.each { i ->
+				inProd.externalReferenceID = i
+				prodString = prodString + "${serializeXml(inProd).drop(38)}"
+			}
+			//TODO Add <items> to beginning to String
+			prodString = "<items>" + prodString + "</items>"
+			
+
+			//replace fully built Items node
+			inXml.items.replaceNode{
+				mkp.yield(new XmlSlurper(false,false).parseText(prodString))
+			}
+			
+			def outString = serializeXml(inXml)
+			
+			outXml = new XmlSlurper(false, false).parseText(outString)
+			
 		}
 		catch (AssertionError e) {
 			
 			try {
-				emptyProduct = xml.product.find{
-				(it.companyID == 'testcoid' && it.catalogID == '12345678' && it.productName == 'Test Product') }
+				inProd = inXml.product
 				
-				assert !emptyProduct.toString().equals(""), "Error: xml.prodcut Not Found in ${inFile.name}!!";
+				assert !inProd.toString().equals(""), "Error: xml.prodcut Not Found in ${inFile.name}!!";
+				
 				
 			} catch (AssertionError a) {
 				throw new Exception("Cannot Find Product Node! Check XML Structure.")
 			}
 		}
-		arrayIds.each { i ->
-			newProduct = emptyProduct
-			newProduct.externalReferenceID = i
-			
-			xml.'**'.product.appendNode(newProduct)
-		}
 		
 		//create a new file to write updated xml to
-		File newOutFile = new File("${inFile.parentFile}/BPU_${inFile.name}")
+		File newOutFile = new File("${inFile.parentFile}/BPU_MultiProduct.xml")
 		newOutFile.createNewFile()
 		
 		println newOutFile.absolutePath
 		
 		//Write it
-		CommonUtil.writeXmlToFile(newOutFile, xml)
+		CommonUtil.writeXmlToFile(newOutFile, outXml)
 		
 		return newOutFile
 	}
 	
+	
+	
+	public static String serializeXml(GPathResult xml)
+	{
+		def mb = new groovy.xml.StreamingMarkupBuilder()
+		mb.encoding = "UTF-8"
+		
+		XmlUtil.serialize(mb.bind {
+				mkp.yield xml
+		} )
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public static String randomIdAsString() {
 		Random rand = new Random()
 		

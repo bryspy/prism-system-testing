@@ -41,15 +41,13 @@ class CommonUtil {
 //	def static final tomInboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/inbound"
 //	def static final tomOutboundPath = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/prism/outbound"
 
-	def static final winInpath = "C:/dev/prism/ingestion/prism/inbound"
-	def static final winOutpath = "C:/dev/prism/publish/prism/outbound"
+	def static final localInpath = "C:/dev/prism/run/prism/inbound"
+	def static final localOutpath = "C:/dev/prism/run/prism/outbound"
 
 	/**
 	 *
 	 */
-	public static void deleteInbound() {
-		deleteInbound(winInpath)
-	}
+	public static void deleteInbound() { deleteInbound(localInpath) }
 	/**
 	 *
 	 * @param path
@@ -70,7 +68,7 @@ class CommonUtil {
 	/**
 	 * Delete Outbound Directory at winOutpath for Windows system outbound path in publish
 	 */
-	public static void deleteOutbound() { deleteOutbound(winOutpath) }
+	public static void deleteOutbound() { deleteOutbound(localOutpath) }
 	
 
 	/**
@@ -130,8 +128,9 @@ class CommonUtil {
 	 * @param xml
 	 */
 	public static void writeXmlToFile(File file, def xml) {
-		FileWriter writer = new FileWriter(file);
-		BufferedWriter buff = new BufferedWriter(writer);
+		BufferedWriter buff = new BufferedWriter(
+			new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
+		
 		buff.write(XmlUtil.serialize(xml))
 		buff.close();
 	}

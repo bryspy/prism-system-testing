@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<loader xmlns="urn:com.digitalriver.bulkloader" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:com.digitalriver.bulkloader http://drhadmin.digitalriver.com/integration/xsd/BulkLoader/6?disposition=attachment">
+<loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:com.digitalriver.bulkloader" xsi:schemaLocation="urn:com.digitalriver.bulkloader http://drhadmin.digitalriver.com/integration/xsd/BulkLoader/6?disposition=attachment">
   <version>1.0</version>
   <loaderType>incremental</loaderType>
   <catalogID>18839800</catalogID>
@@ -8,76 +8,207 @@
   <noOverwriteIfEmpty>true</noOverwriteIfEmpty>
   <items>
     <product>
-      <action>ADD</action>
+      <isCombination>false</isCombination>
+      <action>UPDATE</action>
+      <productID>289640000</productID>
+      <isTrialware>false</isTrialware>
       <externalReferenceID></externalReferenceID>
       <locale>en_GB</locale>
-      <companyID>testcoid</companyID>
-      <catalogID>12345678</catalogID>
-      <productName>Test Product</productName>
-      <displayName>Test Product Display Name</displayName>
-      <shortDescription></shortDescription>
+      <companyID>harperco</companyID>
+      <catalogID>18839800</catalogID>
+      <companyName>HarperCollins Publishers</companyName>
+      <productName>The Magician’s Nephew (The Chronicles of Narnia, Book 1)</productName>
+      <displayName>The Magician’s Nephew (The Chronicles of Narnia, Book 1)</displayName>
+      <shortDescription>&lt;p&gt;Illustrations in this ebook appear in vibrant full colour on a full colour ebook device, and in rich black and white on all other devices.&lt;/p&gt;</shortDescription>
+      <longDescription/>
+      <maxOrderQuantity>1</maxOrderQuantity>
       <platform>eBook</platform>
-      <manufacturer>testManufacturer</manufacturer>
-      <mfrPartNumber>EBA2B784D04B6C50E0430602390A83FC</mfrPartNumber>
-      <sku></sku>
+      <manufacturer>Digiplug</manufacturer>
+      <mfrPartNumber>E9901237793E7E6CE0430602390ABFDB</mfrPartNumber>
+      <sku/>
       <eccn>EAR99</eccn>
       <taxableProductCode>55111502.120</taxableProductCode>
       <taxableUnspscCode>55111502</taxableUnspscCode>
       <categories>
         <category>
-          <categoryPath>
-            <categoryName>UK Default Category</categoryName>
+          <categoryPath locale="en_GB" internal="true">
+            <categoryName categoryID="66611100" isViewable="true">UK Default Category</categoryName>
+          </categoryPath>
+          <categoryPath locale="en_GB" internal="false">
+            <categoryName categoryID="66611100" isViewable="true">UK Default Category</categoryName>
           </categoryPath>
         </category>
       </categories>
       <prices>
-        <price>
+        <price isDefault="false">
           <currencyCode>GBP</currencyCode>
           <type>LIST_PRICE</type>
-          <amount>39.99</amount>
-        </price>
-        <price>
-          <currencyCode>USD</currencyCode>
-          <type>LIST_PRICE</type>
-          <amount>63.18</amount>
-        </price>
-        <price>
-          <currencyCode>GBP</currencyCode>
+          <amount>4.71</amount>
           <locale>en_GB</locale>
-          <type>LIST_PRICE</type>
-          <amount>23.99</amount>
+          <priceListID>39234400</priceListID>
         </price>
-        <price>
-          <currencyCode>EUR</currencyCode>
+        <price isDefault="false">
+          <currencyCode>GBP</currencyCode>
           <type>LIST_PRICE</type>
-          <amount>47.19</amount>
+          <amount>4.71</amount>
+          <locale>en_US</locale>
+          <priceListID>39234500</priceListID>
         </price>
-        <price>
+        <price isDefault="false">
           <currencyCode>AUD</currencyCode>
           <type>LIST_PRICE</type>
-          <amount>41.99</amount>
+          <amount>7.99</amount>
+          <priceListID>39471500</priceListID>
         </price>
-        <price>
-          <currencyCode>GBP</currencyCode>
-          <locale>en_US</locale>
+        <price isDefault="false">
+          <currencyCode>CAD</currencyCode>
           <type>LIST_PRICE</type>
-          <amount>23.99</amount>
+          <amount>11.99</amount>
+          <priceListID>39471600</priceListID>
+        </price>
+        <price isDefault="false">
+          <currencyCode>EUR</currencyCode>
+          <type>LIST_PRICE</type>
+          <amount>3.32</amount>
+          <priceListID>39471700</priceListID>
+        </price>
+        <price isDefault="false">
+          <currencyCode>GBP</currencyCode>
+          <type>LIST_PRICE</type>
+          <amount>3.28</amount>
+          <priceListID>35356300</priceListID>
+        </price>
+        <price isDefault="true">
+          <currencyCode>USD</currencyCode>
+          <type>LIST_PRICE</type>
+          <amount>5.18</amount>
+          <priceListID>34547100</priceListID>
         </price>
       </prices>
       <attributes>
+        <attribute isVaryingAttribute="true">
+          <attributeID>100</attributeID>
+          <name>platform</name>
+          <value>eBook</value>
+          <familyID>11</familyID>
+          <familyName>Software</familyName>
+        </attribute>
         <attribute>
+          <attributeID>27427200</attributeID>
+          <name>isRecipientEmailAddressRequired</name>
+          <value>
+            <boolean>false</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>27427000</attributeID>
+          <name>isShippingAddressRequired</name>
+          <value>
+            <boolean>false</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>27427100</attributeID>
+          <name>isShippingMethodRequired</name>
+          <value>
+            <boolean>false</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>25</attributeID>
+          <name>isViewable</name>
+          <value>
+            <boolean>true</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>26</attributeID>
+          <name>isOrderable</name>
+          <value>
+            <boolean>true</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>2</attributeID>
+          <name>shortDescription</name>
+          <value>&lt;p&gt;Illustrations in this ebook appear in vibrant full colour on a full colour ebook device, and in rich black and white on all other devices.&lt;/p&gt;</value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>16</attributeID>
+          <name>longDescription</name>
+          <value/>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>41</attributeID>
+          <name>minOrderQuantity</name>
+          <value>
+            <int>0</int>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>42</attributeID>
+          <name>maxOrderQuantity</name>
+          <value>
+            <int>1</int>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>38876600</attributeID>
+          <name>nonSolr</name>
+          <value>
+            <boolean>false</boolean>
+          </value>
+          <familyID>2</familyID>
+          <familyName>Storefront Settings</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>220500</attributeID>
+          <name>manufactureCountry</name>
+          <value>GB</value>
+          <familyID>16</familyID>
+          <familyName>Export Controls</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>220700</attributeID>
+          <name>eccn</name>
+          <value>EAR99</value>
+          <familyID>16</familyID>
+          <familyName>Export Controls</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>19</attributeID>
           <name>licenseException</name>
           <value>AGR</value>
           <familyID>16</familyID>
           <familyName>Export Controls</familyName>
         </attribute>
         <attribute>
+          <attributeID>275200</attributeID>
           <name>auditEmailRecipient</name>
           <value>mfox@digitalriver.com</value>
           <familyID>187900</familyID>
           <familyName>Preorder</familyName>
         </attribute>
         <attribute>
+          <attributeID>275300</attributeID>
           <name>auditNumDays</name>
           <value>
             <int>3</int>
@@ -86,46 +217,62 @@
           <familyName>Preorder</familyName>
         </attribute>
         <attribute>
-          <name>ONIX</name>
-          <value>HarperCollins Publishers Ltd. / 201311170021 / Delta update of ebook products</value>
-          <familyID>10200300</familyID>
-          <familyName>Variations</familyName>
-        </attribute>
-        <attribute>
+          <attributeID>275500</attributeID>
           <name>preorderEnabled</name>
           <value>
-            <boolean>true</boolean>
+            <boolean>false</boolean>
           </value>
           <familyID>187900</familyID>
           <familyName>Preorder</familyName>
         </attribute>
         <attribute>
-          <name>Imprint</name>
-          <value>HarperCollinsChildren???sBooks</value>
-          <familyID>10200300</familyID>
-          <familyName>Variations</familyName>
+          <attributeID>275800</attributeID>
+          <name>releaseDate</name>
+          <value>
+            <date>2009-05-04T19:00:00-0500</date>
+          </value>
+          <familyID>187900</familyID>
+          <familyName>Preorder</familyName>
         </attribute>
         <attribute>
+          <attributeID>37471700</attributeID>
           <name>Author</name>
           <value>C. S. Lewis</value>
           <familyID>10200300</familyID>
           <familyName>Variations</familyName>
         </attribute>
         <attribute>
-          <name>releaseDate</name>
-          <value>
-            <date>2013-11-05T00:00:00+00:00</date>
-          </value>
-          <familyID>187900</familyID>
-          <familyName>Preorder</familyName>
-        </attribute>
-        <attribute>
+          <attributeID>37546900</attributeID>
           <name>Format</name>
-          <value>Encrypted EPUB ebook</value>
+          <value>DRM ebook</value>
           <familyID>10200300</familyID>
           <familyName>Variations</familyName>
         </attribute>
+        <attribute>
+          <attributeID>37471600</attributeID>
+          <name>Imprint</name>
+          <value>HarperCollinsChildren’sBooks</value>
+          <familyID>10200300</familyID>
+          <familyName>Variations</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>37966800</attributeID>
+          <name>ONIX</name>
+          <value>HarperCollins Publishers Ltd. / 201409032330 / Delta update of ebook products</value>
+          <familyID>10200300</familyID>
+          <familyName>Variations</familyName>
+        </attribute>
+        <attribute>
+          <attributeID>38761600</attributeID>
+          <name>otherFulfillmentIntegrationsEnabled</name>
+          <value>
+            <boolean>true</boolean>
+          </value>
+          <familyID>1529100</familyID>
+          <familyName>Other Fulfillment Integrations</familyName>
+        </attribute>
       </attributes>
+      <availableQuantity>0</availableQuantity>
       <more>
         <productElectronicFulfillment>
           <electronicFulfillerID>harperco</electronicFulfillerID>
@@ -134,16 +281,15 @@
       </more>
       <isOrderable>true</isOrderable>
       <isViewable>true</isViewable>
+      <creationDate>2014-09-04T00:29:32-0500</creationDate>
+      <modificationDate>2014-09-04T00:29:34-0500</modificationDate>
+      <minOrderQuantity>0</minOrderQuantity>
       <limitedToSupportingLocales>false</limitedToSupportingLocales>
       <manufactureCountry>GB</manufactureCountry>
-      <minOrderQuantity>0</minOrderQuantity>
-      <maxOrderQuantity>1</maxOrderQuantity>
-      <exportRestriction>
-        <listType>Inclusion</listType>
-        <countries>AE,AT,AU,BE,BG,CH,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HK,HR,HU,IE,IN,IS,IT,JP,LI,LT,LU,LV,MT,MY,NL,NO,NZ,PL,PT,RO,RU,SE,SG,SI,SK,TR,ZA</countries>
-        <isBillingRestrictionEnabled>true</isBillingRestrictionEnabled>
-      </exportRestriction>
+      <licenseException>AGR</licenseException>
       <returnMethod>LOD</returnMethod>
+      <productStatus>Deployed</productStatus>
+      <productVersion>15</productVersion>
     </product>
   </items>
 </loader>

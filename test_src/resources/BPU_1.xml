@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<loader xmlns="urn:com.digitalriver.bulkloader" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:com.digitalriver.bulkloader http://drhadmin.digitalriver.com/integration/xsd/BulkLoader/6?disposition=attachment">
+<version>1.0</version>
+<loaderType>incremental</loaderType>
+<catalogID>18839800</catalogID>
+<catalogName>HarperCollins</catalogName>
+<ownerCompanyID>harperco</ownerCompanyID>
+<noOverwriteIfEmpty>true</noOverwriteIfEmpty>
+<items>
+<product>
+<isCombination>false</isCombination>
+<action>UPDATE</action>
+<productID>291938900</productID>
+<isTrialware>false</isTrialware>
+<externalReferenceID>9780007504596</externalReferenceID>
+<locale>en_GB</locale>
+<companyID>harperco</companyID>
+<catalogID>18839800</catalogID>
+<companyName>HarperCollins Publishers  TEST234 For the showcase</companyName>
+<productName>Where the Devil Can’t Go (A Kiszka &amp; Kershaw Mystery) TEST 23</productName>
+<displayName>Where the Devil Can’t Go (A Kiszka &amp; Kershaw Mystery 3)</displayName>
+<shortDescription>&lt;p&gt;THE FIRST KISZKA AND KERSHAW MYSTERY 3&lt;/p&gt;</shortDescription>
+<maxOrderQuantity>1</maxOrderQuantity>
+<platform>eBook</platform>
+<manufacturer>Digiplug</manufacturer>
+<mfrPartNumber>EC30AA199AF033C1E0430602390A3A8B</mfrPartNumber>
+<sku>9780007504596</sku>
+<eccn>EAR99</eccn>
+<taxableProductCode>55111502.120</taxableProductCode>
+<taxableUnspscCode>55111502</taxableUnspscCode>
+<categories>
+<category>
+<categoryPath locale="en_GB" internal="true">
+<categoryName categoryID="66611100" isViewable="true">UK Default Category</categoryName>
+</categoryPath>
+<categoryPath locale="en_GB" internal="false">
+<categoryName categoryID="66611100" isViewable="true">UK Default Category</categoryName>
+</categoryPath>
+</category>
+</categories>
+<prices>
+<price isDefault="false">
+<currencyCode>GBP</currencyCode>
+<type>LIST_PRICE</type>
+<amount>4.99</amount>
+<locale>en_GB</locale>
+<priceListID>39234400</priceListID>
+</price>
+<price isDefault="false">
+<currencyCode>GBP</currencyCode>
+<type>LIST_PRICE</type>
+<amount>4.99</amount>
+<locale>en_US</locale>
+<priceListID>39234500</priceListID>
+</price>
+<price isDefault="false">
+<currencyCode>AUD</currencyCode>
+<type>LIST_PRICE</type>
+<amount>7.99</amount>
+<priceListID>39471500</priceListID>
+</price>
+<price isDefault="false">
+<currencyCode>EUR</currencyCode>
+<type>LIST_PRICE</type>
+<amount>3.19</amount>
+<priceListID>39471700</priceListID>
+</price>
+<price isDefault="false">
+<currencyCode>GBP</currencyCode>
+<type>LIST_PRICE</type>
+<amount>3.16</amount>
+<priceListID>35356300</priceListID>
+</price>
+<price isDefault="true">
+<currencyCode>USD</currencyCode>
+<type>LIST_PRICE</type>
+<amount>4.99</amount>
+<priceListID>34547100</priceListID>
+</price>
+</prices>
+<attributes>
+<attribute isVaryingAttribute="true">
+<attributeID>100</attributeID>
+<name>platform</name>
+<value>eBook</value>
+<familyID>11</familyID>
+<familyName>Software</familyName>
+</attribute>
+<attribute>
+<attributeID>27427200</attributeID>
+<name>isRecipientEmailAddressRequired</name>
+<value>
+<boolean>false</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>27427000</attributeID>
+<name>isShippingAddressRequired</name>
+<value>
+<boolean>false</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>27427100</attributeID>
+<name>isShippingMethodRequired</name>
+<value>
+<boolean>false</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>25</attributeID>
+<name>isViewable</name>
+<value>
+<boolean>true</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>26</attributeID>
+<name>isOrderable</name>
+<value>
+<boolean>true</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>2</attributeID>
+<name>shortDescription</name>
+<value>&lt;p&gt;THE FIRST KISZKA AND KERSHAW MYSTERY&lt;/p&gt;</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>41</attributeID>
+<name>minOrderQuantity</name>
+<value>
+<int>0</int>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>42</attributeID>
+<name>maxOrderQuantity</name>
+<value>
+<int>1</int>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>38876600</attributeID>
+<name>nonSolr</name>
+<value>
+<boolean>false</boolean>
+</value>
+<familyID>2</familyID>
+<familyName>Storefront Settings</familyName>
+</attribute>
+<attribute>
+<attributeID>220500</attributeID>
+<name>manufactureCountry</name>
+<value>GB</value>
+<familyID>16</familyID>
+<familyName>Export Controls</familyName>
+</attribute>
+<attribute>
+<attributeID>220700</attributeID>
+<name>eccn</name>
+<value>EAR99</value>
+<familyID>16</familyID>
+<familyName>Export Controls</familyName>
+</attribute>
+<attribute>
+<attributeID>19</attributeID>
+<name>licenseException</name>
+<value>AGR</value>
+<familyID>16</familyID>
+<familyName>Export Controls</familyName>
+</attribute>
+<attribute>
+<attributeID>275200</attributeID>
+<name>auditEmailRecipient</name>
+<value>demo@digiplug.com</value>
+<familyID>187900</familyID>
+<familyName>Preorder</familyName>
+</attribute>
+<attribute>
+<attributeID>275300</attributeID>
+<name>auditNumDays</name>
+<value>
+<int>3</int>
+</value>
+<familyID>187900</familyID>
+<familyName>Preorder</familyName>
+</attribute>
+<attribute>
+<attributeID>275500</attributeID>
+<name>preorderEnabled</name>
+<value>
+<boolean>false</boolean>
+</value>
+<familyID>187900</familyID>
+<familyName>Preorder</familyName>
+</attribute>
+<attribute>
+<attributeID>275800</attributeID>
+<name>releaseDate</name>
+<value>
+<date>2013-02-06T18:00:00-0600</date>
+</value>
+<familyID>187900</familyID>
+<familyName>Preorder</familyName>
+</attribute>
+<attribute>
+<attributeID>37471700</attributeID>
+<name>Author</name>
+<value>Anya Lipska</value>
+<familyID>10200300</familyID>
+<familyName>Variations</familyName>
+</attribute>
+<attribute>
+<attributeID>37546900</attributeID>
+<name>Format</name>
+<value>DRM ebook</value>
+<familyID>10200300</familyID>
+<familyName>Variations</familyName>
+</attribute>
+<attribute>
+<attributeID>37471600</attributeID>
+<name>Imprint</name>
+<value>The Friday Project</value>
+<familyID>10200300</familyID>
+<familyName>Variations</familyName>
+</attribute>
+<attribute>
+<attributeID>37966800</attributeID>
+<name>ONIX</name>
+<value>HarperCollins Publishers Ltd. / 201409012336 / Delta update of ebook products</value>
+<familyID>10200300</familyID>
+<familyName>Variations</familyName>
+</attribute>
+<attribute>
+<attributeID>38761600</attributeID>
+<name>otherFulfillmentIntegrationsEnabled</name>
+<value>
+<boolean>true</boolean>
+</value>
+<familyID>1529100</familyID>
+<familyName>Other Fulfillment Integrations</familyName>
+</attribute>
+</attributes>
+<availableQuantity>0</availableQuantity>
+<more>
+<productElectronicFulfillment>
+<electronicFulfillerID>harperco</electronicFulfillerID>
+<isEnabled>true</isEnabled>
+</productElectronicFulfillment>
+</more>
+<isOrderable>true</isOrderable>
+<isViewable>true</isViewable>
+<creationDate>2014-09-03T08:48:05-0500</creationDate>
+<modificationDate>2014-09-03T08:48:07-0500</modificationDate>
+<minOrderQuantity>0</minOrderQuantity>
+<limitedToSupportingLocales>false</limitedToSupportingLocales>
+<manufactureCountry>GB</manufactureCountry>
+<licenseException>AGR</licenseException>
+<returnMethod>LOD</returnMethod>
+<productStatus>Deployed</productStatus>
+<productVersion>21</productVersion>
+</product>
+</items>
+</loader>

@@ -1,4 +1,5 @@
-package in_development;
+package regression.sprint2_1;
+
 import static org.junit.Assert.*;
 
 import java.net.URL;
@@ -6,7 +7,9 @@ import java.net.URL;
 import org.junit.BeforeClass;
 import org.junit.After
 import org.junit.Test;
+
 import java.util.Random;
+
 import org.apache.commons.io.FileUtils
 
 import groovyx.net.http.*
@@ -21,9 +24,9 @@ import common.prism.CommonPrism;
 import common.util.CommonUtil;
 import common.util.CommonXml;
 
-class SimpleNewProductsTest {
+class DuplicateProductsTest {
 
-		
+	static String domain = "http://localhost:8080";
 	static String inFilename = "SingleProduct.xml"
 	File inFile;
 	
@@ -32,25 +35,25 @@ class SimpleNewProductsTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
-		println "\n\n====Start Test 'NewProductsTest'====\n\n"
-		
+		println "\n\n====Start Test '${DuplicateProductsTest.name}'====\n\n"
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
 		
 	}
-	
+
 
 	@Test
-	public void testNewProductPersistence() {
-		
+	public void testDeDuplication() {
 /*
- * Step 1: Ingest xml with new Single Product
+ * Step 1: Ingest New Product
  */
+		
 		//Generate Random ID for New Prism Product
+		//File prodFile = Prism_Common_Test.getResourceFile(inFilename)
 		File prodFile = CommonPrism.getResourceFile(inFilename)
 		assert prodFile.exists()
-		File destDir = new File(CommonUtil.winInpath)
+		File destDir = new File(CommonUtil.localInpath)
 		assert destDir.exists()
 		
 		
@@ -60,25 +63,32 @@ class SimpleNewProductsTest {
 		//get File returned with newly generated externalReferenceID
 		inFile = CommonXml.randomExRefIdToFile(prodFile, exRefId)
 		
-		//Start Ingestion!  
-		// :Move Test XML test File with New Product to Inbound for Ingestion
 		
-		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir)
-
+		//Start Ingestion!
+		// :Move Test XML test File with New Product to Inbound for Ingestion
+		FileUtils.copyFileToDirectory(inFile, destDir)
+		
+		assert {new File("${destDir}/${inFile}").exists()}
+		
+		
+		//Verify File ingested and published
 		println "File ${inFile.name} Ingested!"
 		 
-		assert CommonPrism.isBatchFinished(batchId).equals(true), "Batch Did Not Finish processing File!"
+		
 /*
- * Step 2: Check that File was Published
+ * Step 2: Verify Publish
  */
-		assert CommonPrism.isOutboundPublished(CommonUtil.tomOutboundPath).equals(true), "Outbound File Not Published!"
-		File outFile = CommonPrism.getOutboundFile(CommonUtil.tomOutboundPath)
+		//
+		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true)
+		File outFile = CommonPrism.getOutboundFile(CommonUtil.localOutpath)
 		
 		println "${outFile.name} was published!"
 		
+		CommonUtil.deleteInbound()
 		
-			
-		
+/*
+ * Step 3: Verify DB Persistence of new Product
+ */
 		//Verify in database that New Product data was added for persistence
 		sql.eachRow(""" select d.PRISM_PRODUCT_ID, d.COMPANY_ID, c.EXTERNAL_REFERENCE_ID, d.SOURCE_DOCUMENT
 							from PRISM_Key_Crosswalk c,  PRISM_Source_Data d
@@ -87,37 +97,58 @@ class SimpleNewProductsTest {
 				{ id ->
 					assert id.External_Reference_ID.equals(exRefId), "Product with External Reference ID '${exRefId}' was not added to the Database!"
 					println "Product with External Reference ID '${exRefId}' was added to the Database!"
-				}	
-		
+				}
 		
 /*
- * Step 3: Verify that Outbound File includes new products for Publish to GC		
+ * Step 4: Copy New Product File to Inbound for Ingestion
  */
-		//Verify that Outbound File includes New Products for Publish to GC
-		def outXml = new XmlSlurper(false, false).parse(outFile)
 		
-		assert outXml.'**'.find {
-				it.name().startsWith('externalReference') }.each
-					{ node -> node.text() == '${exRefId}' }  == exRefId
+		//Start Ingestion!
+		CommonPrism.startIngestionGetBatchId(inFile, destDir)
+		
+		assert {new File("${destDir}/${inFile}").exists()}
+		 
+		
+/*
+ * Step 2: Verify Publish
+ */
+		//
+		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true)
+		outFile = CommonPrism.getOutboundFile(CommonUtil.localOutpath)
+		
+		println "${outFile.name} was published!"
+		
+/*
+ * Step 5: Verify No product is Published for GC
+ */
+		def xml = new XmlSlurper().parse(outFile)
+		
+		assert xml.product.toString().equals(""), "Duplicate Product should not be returned in Published GC File!"
+		
+
+		
+/*
+ * Step 6: Verify Product is not persisted twice in DB
+ */
+		sql.eachRow(""" select External_Reference_ID, Count(*) as Count
+						from PRISM_KEY_CROSSWALK 
+						Group By External_Reference_ID
+						Having Count(*) > 1""") 
+					{ count ->
+						assert count.Count == null
+					}
+		
 	}
-	
 	
 	@After
-	void after() {
-		//TODO Clean up New Products added to Database
+	public void after() {
 		
-		/*
-		 * def sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
-		 * 	, "DRHADMIN", "summer123")
-		 */
 		
-		//sql.execute("delete from prism_source where client_id = ${cl_id}")
-		
-		CommonUtil.deleteInbound()
-		//Delete testIngestFile(s)
+		//Delete Ingested File on Exit
 		inFile.deleteOnExit()
 		
-		println "\n\n====Ending Test===\n\n"
 		
+		println "\n\n====End Test====\n\n"
 	}
+
 }

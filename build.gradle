@@ -7,9 +7,9 @@ apply plugin: 'maven'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-apply from:  'build-scripts/static-code-analysis.gradle'
-apply from:  'build-scripts/integration-tests2.gradle'
-apply from:  'build-scripts/bdd-tests.gradle'
+//apply from:  'build-scripts/static-code-analysis.gradle'
+//apply from:  'build-scripts/integration-tests2.gradle'
+//apply from:  'build-scripts/bdd-tests.gradle'
 
 
 jar {

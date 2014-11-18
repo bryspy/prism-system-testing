@@ -200,10 +200,11 @@ class CommonPrism {
 		//Check and wait for outbound File to drop
 
 		while (outDir.list().length < 1) {
-			if (i > 60) {
-				throw new FileNotFoundException("Outbound File Not Published after 60+ Seconds")
+			if (i > 150) {
+				throw new FileNotFoundException("Outbound File Not Published after 2+ minutes")
 			}
-			print "."
+			if (i%3 == 0)
+				print "."
 			Thread.sleep(1000);
 				
 			i++
