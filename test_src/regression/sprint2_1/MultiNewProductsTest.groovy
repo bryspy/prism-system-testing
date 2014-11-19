@@ -20,9 +20,9 @@ import groovy.json.*
 import groovy.sql.Sql
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-import common.prism.CommonPrism;
-import common.util.CommonUtil;
-import common.util.CommonXml;
+import common.CommonPrism;
+import common.CommonUtil;
+import common.CommonXml;
 
 
 
@@ -78,10 +78,10 @@ class MultiNewProductsTest {
 		def products = xml.depthFirst().findAll { it.name() == 'product' };
 		
 		
-		//assert that number of product nodes equals the size of prodCount
+		//Verify that number of product nodes equals the size of prodCount
 		assert prodCount == products.size()
 		
-		//assert that products include the expected ids
+		//Verify that products include the expected ids
 		
 		arrayIdsCopy.each { i ->
 			assert ( 1 == products.findAll{ it.externalReferenceID == i }.size() ), "Cannot Find Product with ExternalReferenceID: ${i}"

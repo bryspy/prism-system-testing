@@ -1,4 +1,4 @@
-package common.util
+package common
 
 
 import static org.junit.Assert.*;
@@ -29,8 +29,6 @@ import groovy.util.slurpersupport.GPathResult
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
 import groovy.io.FileType
-
-import common.prism.CommonPrism
 
 class CommonXml {
 	

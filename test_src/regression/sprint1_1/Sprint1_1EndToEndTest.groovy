@@ -25,9 +25,8 @@ import static groovyx.net.http.ContentType.*
 import static groovyx.net.http.Method.*
 import groovy.json.*
 import groovy.util.XmlSlurper
-
-import common.prism.CommonPrism
-import common.util.CommonUtil
+import common.CommonPrism;
+import common.CommonUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class Sprint1_1EndToEndTest {

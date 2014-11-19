@@ -19,10 +19,9 @@ import groovy.json.*
 import groovy.sql.Sql
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-
-import common.prism.CommonPrism;
-import common.util.CommonUtil;
-import common.util.CommonXml;
+import common.CommonPrism;
+import common.CommonUtil;
+import common.CommonXml;
 
 class DuplicateProductsTest {
 
@@ -36,6 +35,7 @@ class DuplicateProductsTest {
 	public static void setUpBeforeClass() throws Exception {
 		
 		println "\n\n====Start Test '${DuplicateProductsTest.name}'====\n\n"
+		
 		//Remove Inbound and Outbound Files
 		CommonUtil.deleteInbound()
 		CommonUtil.deleteOutbound()
@@ -78,8 +78,7 @@ class DuplicateProductsTest {
 /*
  * Step 2: Verify Publish
  */
-		//
-		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true)
+		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true), "Outbound File Not Published!!"
 		File outFile = CommonPrism.getOutboundFile(CommonUtil.localOutpath)
 		
 		println "${outFile.name} was published!"
@@ -112,7 +111,6 @@ class DuplicateProductsTest {
 /*
  * Step 2: Verify Publish
  */
-		//
 		assert CommonPrism.isOutboundPublished(CommonUtil.localOutpath).equals(true)
 		outFile = CommonPrism.getOutboundFile(CommonUtil.localOutpath)
 		
@@ -135,7 +133,7 @@ class DuplicateProductsTest {
 						Group By External_Reference_ID
 						Having Count(*) > 1""") 
 					{ count ->
-						assert count.Count == null
+						assert count.Count == null, "Duplicate Entry of External Reference ID!!!"
 					}
 		
 	}

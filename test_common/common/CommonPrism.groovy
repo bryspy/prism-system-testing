@@ -1,4 +1,4 @@
-package common.prism;
+package common;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -218,6 +218,14 @@ class CommonPrism {
 		}
 		File outXmlFile = new File(list[0].absolutePath)
 		return outXmlFile;
+	}
+	
+	/**
+	 * Check if the Outbound File was Published to the local Outbound path
+	 * @return True if File was Published
+	 */
+	public static boolean isOutboundPublished() {
+		return isOutboundPublished(CommonUtil.localOutpath)
 	}
 	
 	

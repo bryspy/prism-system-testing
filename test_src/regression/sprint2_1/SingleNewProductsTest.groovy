@@ -6,7 +6,9 @@ import java.net.URL;
 import org.junit.BeforeClass;
 import org.junit.After
 import org.junit.Test;
+
 import java.util.Random;
+
 import org.apache.commons.io.FileUtils
 
 import groovyx.net.http.*
@@ -16,10 +18,9 @@ import groovy.json.*
 import groovy.sql.Sql
 import groovy.xml.StreamingMarkupBuilder
 import groovy.xml.XmlUtil
-
-import common.prism.CommonPrism;
-import common.util.CommonUtil;
-import common.util.CommonXml;
+import common.CommonPrism;
+import common.CommonUtil;
+import common.CommonXml;
 
 class SingleNewProductsTest {
 
@@ -62,7 +63,6 @@ class SingleNewProductsTest {
 		
 		//Start Ingestion!  
 		// :Move Test XML test File with New Product to Inbound for Ingestion
-		
 		String batchId = CommonPrism.startIngestionGetBatchId(inFile, destDir)
 
 		println "File ${inFile.name} Ingested!"
@@ -104,16 +104,7 @@ class SingleNewProductsTest {
 	
 	@After
 	void after() {
-		//TODO Clean up New Products added to Database
 		
-		/*
-		 * def sql = Sql.newInstance("jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS =(PROTOCOL = TCP)(HOST = 10.16.5.203)(PORT = 1521)))(CONNECT_DATA =(SID = devdb)(SERVER = DEDICATED)))"
-		 * 	, "DRHADMIN", "summer123")
-		 */
-		
-		//sql.execute("delete from prism_source where client_id = ${cl_id}")
-		
-		//CommonUtil.deleteInbound()
 		
 		//Delete testIngestFile(s)
 		inFile.deleteOnExit()

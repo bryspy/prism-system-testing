@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import groovy.sql.Sql
 
-import common.prism.CommonPrism
+import groovy.sql.Sql
+import common.CommonPrism;
 
 class DatabaseTest {
 
