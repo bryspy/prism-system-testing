@@ -107,9 +107,9 @@ dependencies {
         [group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.2'],
                 
         // Logging
-        [group: 'log4j', name: 'log4j', version: '1.2.17'],
-        [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'],
-        [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'],
+//        [group: 'log4j', name: 'log4j', version: '1.2.17'],
+//        [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'],
+//        [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'],
       
         // Groovy
         [group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.3.4'],
@@ -146,11 +146,11 @@ dependencies {
         [group: 'org.powermock', name: 'powermock-module-junit4', version: '1.5.5'],
         [group: 'org.powermock', name: 'powermock-api-mockito', version: '1.5.5'],
         [group: 'org.powermock', name: 'powermock-api-easymock', version: '1.5.5'],
-        [group: 'info.cukes', name: 'cucumber-core', version: '1.1.8'],
-        [group: 'info.cukes', name: 'cucumber-java', version: '1.1.8'],
-        [group: 'info.cukes', name: 'cucumber-junit', version: '1.1.8'],
-        [group: 'info.cukes', name: 'cucumber-groovy', version: '1.1.8', exclude: [group: 'org.codehaus.groovy']],
-        [group: 'info.cukes', name: 'cucumber-spring', version: '1.1.8'],
+//        [group: 'info.cukes', name: 'cucumber-core', version: '1.1.8'],
+//        [group: 'info.cukes', name: 'cucumber-java', version: '1.1.8'],
+//        [group: 'info.cukes', name: 'cucumber-junit', version: '1.1.8'],
+//        [group: 'info.cukes', name: 'cucumber-groovy', version: '1.1.8', exclude: [group: 'org.codehaus.groovy']],
+//        [group: 'info.cukes', name: 'cucumber-spring', version: '1.1.8'],
         [group: 'com.jayway.jsonpath', name: 'json-path', version: '0.9.1'],
         [group: 'com.jayway.jsonpath', name: 'json-path-assert', version: '0.9.1'],
         [group: 'org.json', name: 'json', version: '20140107']

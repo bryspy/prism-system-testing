@@ -124,10 +124,11 @@ class DeltaProductsTest {
  */
 		def outXml = new XmlSlurper(false,false).parse(outFile)
 		
-		assert outXml.items.product.platform.equals("Test Paperback")
+		assert outXml.items.product.platform.equals("Test Paperback"), "Change is not Contained in Published File!!!"
 /*
  * Step 4: Verify Delta Exists in the Database
  */
+		
 		sql.eachRow(""" select p.PRISM_PRODUCT_ID, p.PRISM_PRODUCT, c.EXTERNAL_REFERENCE_ID
 							from PRISM_Key_Crosswalk c,  PRISM_Product p
 							where c.External_Reference_ID = ${exRefId} AND 
