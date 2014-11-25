@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.net.URL;
 
-import org.junit.BeforeClass;
-import org.junit.After
-import org.junit.Test;
+import org.testng.annotations.*
+import org.testng.TestNG
+import org.testng.TestListenerAdapter
 
 import java.util.Random;
 
@@ -116,7 +116,7 @@ class MultiNewProductsTest {
 		}
 	}
 	
-	@After
+	@AfterTest
 	public void after() {
 		
 		inBoundFile.deleteOnExit()

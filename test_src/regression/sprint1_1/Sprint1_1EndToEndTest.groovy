@@ -1,13 +1,9 @@
 package regression.sprint1_1
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.testng.annotations.*
+import org.testng.TestNG
+import org.testng.TestListenerAdapter
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -28,7 +24,6 @@ import groovy.util.XmlSlurper
 import common.CommonPrism;
 import common.CommonUtil;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class Sprint1_1EndToEndTest {
 
 	//def static String domain = "http://localhost:8080";
@@ -50,9 +45,8 @@ class Sprint1_1EndToEndTest {
 	}
 		
 	
-	@Ignore
-	@Test
-	@Deprecated
+	@Test(enabled=false)
+	//@Deprecated Does not apply to current state of PRISM
 	public void verifyTransformation() {
 		
 		def bpuFileName = "BPU_Digital_River_48513_20140908_210257.xml"
@@ -77,7 +71,7 @@ class Sprint1_1EndToEndTest {
 		println "Transform to <ShortDescription> Occured!"
 	}
 	
-	@After
+	@AfterTest
 	public void after() {
 		CommonUtil.deleteInbound()
 		

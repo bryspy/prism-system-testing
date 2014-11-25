@@ -1,11 +1,12 @@
 package regression.sprint2_1;
+
 import static org.junit.Assert.*;
 
-import java.net.URL;
+import org.testng.annotations.*
+import org.testng.TestNG
+import org.testng.TestListenerAdapter
 
-import org.junit.BeforeClass;
-import org.junit.After
-import org.junit.Test;
+import java.net.URL;
 
 import java.util.Random;
 
@@ -102,7 +103,7 @@ class SingleNewProductsTest {
 	}
 	
 	
-	@After
+	@AfterTest
 	void after() {
 		
 		
