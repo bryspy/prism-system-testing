@@ -44,7 +44,7 @@ class SingleNewProductsTest {
 	
 
 	@Test
-	public void testNewProductPersistence() {
+	public void testSingleNewProduct() {
 		
 /*
  * Step 1: Ingest xml with new Single Product
