@@ -2,12 +2,11 @@ package regression.sprint2_1;
 
 
 import static org.junit.Assert.*;
+import org.testng.annotations.*
+import org.testng.TestNG
+import org.testng.TestListenerAdapter
 
 import java.net.URL;
-
-import org.junit.BeforeClass;
-import org.junit.After
-import org.junit.Test;
 
 import java.util.Random;
 
@@ -142,7 +141,7 @@ class DeltaProductsTest {
 		
 	}
 	
-	@After
+	@AfterTest
 	public void after() {
 		//Delete Test Files on Exit
 		newProductFile.deleteOnExit()
