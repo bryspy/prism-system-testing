@@ -4,9 +4,10 @@
 	<classpathentry kind="src" path="test_src"/>
 	<classpathentry exported="true" kind="src" path="/agents"/>
 	<classpathentry exported="true" kind="src" path="/common"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="var" path="TESTNG_HOME"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
